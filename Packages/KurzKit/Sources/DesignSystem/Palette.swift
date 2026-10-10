@@ -14,9 +14,12 @@ public extension Color {
     static let appPending = Color("appPending", bundle: .module)
     static let appPendingForeground = Color("appPendingForeground", bundle: .module)
     static let appDestructive = Color("appDestructive", bundle: .module)
+    static let appDestructiveForeground = Color("appDestructiveForeground", bundle: .module)
     static let appRing = Color("appRing", bundle: .module)
     static let appPlaceholder = Color("appPlaceholder", bundle: .module)
-    static let appCategoryPalette: [Color] = [0xA78BFA, 0xF0A35E, 0x5EC8C4, 0x6AA8F0, 0x8BD17C].map { Color(hex: $0) }
+    static let appCategoryNames = ["appCategoryViolet", "appCategoryOrange", "appCategoryTeal", "appCategoryBlue", "appCategoryGreen"]
+    static let appCategoryPalette: [Color] = appCategoryNames.map { Color($0, bundle: .module) }
+    static let appCategoryTintOpacity = (light: 0.14, dark: 0.22)
 
     static func appCategory(id: String?, name: String? = nil) -> Color {
         guard let id else { return .appPrimary }

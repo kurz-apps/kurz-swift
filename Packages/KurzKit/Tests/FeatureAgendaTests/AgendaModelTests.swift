@@ -236,6 +236,47 @@ private func zoned(_ identifier: String) -> Calendar {
         #expect(model.hiddenCategories.isEmpty && model.hiddenForms.isEmpty && model.onlyPending == false)
     }
 
+    @Test func categoryHasASecondChannelBesidesColour() {
+        var spa = session("2026-10-06", hour: 9, category: "Spa", service: "Massagem")
+        #expect(rowSubtitle(spa) == "Spa · Form 1 · 1/2")
+        #expect(blockDetails(spa, timeZone: "UTC") == "Spa · 09:00 · 1/2")
+        #expect(spokenSummary(spa, timeZone: "UTC") == "Massagem, Spa, 09:00–10:00, 1/2")
+        spa.capacity = 1
+        #expect(rowSubtitle(spa) == "Spa · Form 1")
+        let plain = session("2026-10-06", hour: 9)
+        #expect(rowSubtitle(plain) == "Form 1 · 1/2")
+        #expect(spokenSummary(plain, timeZone: "UTC") == "S, 09:00–10:00, 1/2")
+    }
+
+    @Test func contextMenuCopiesTimeAndClients() {
+        let group = session("2026-10-06", hour: 9, clients: ["Ana Silva", "Bruno Costa"])
+        #expect(clientList(group) == "Ana Silva\nBruno Costa")
+        #expect(sessionWhen(group, timeZone: "UTC").hasSuffix(" · 09:00–10:00"))
+    }
+
+    @Test func selectionFollowsTheLatestData() async {
+        let first = session("2026-10-06", hour: 9, clients: ["Ana"])
+        let calls = Mutex(0)
+        let model = AgendaModel(calendar: utcMondayCalendar, today: saturday) { _, _ in
+            let call = calls.withLock { $0 += 1; return $0 }
+            var updated = first
+            if call > 1 { updated.appointments = [] }
+            return AgendaResponse(timeZone: "UTC", sessions: [updated])
+        }
+        await model.refresh()
+        #expect(model.selectedSession == nil)
+        model.selection = first.id
+        #expect(model.selectedSession?.appointments.count == 1)
+        await model.refresh()
+        #expect(model.selectedSession?.appointments.isEmpty == true)
+        model.selection = "missing"
+        #expect(model.selectedSession == nil)
+    }
+
+    @Test func blocksAreAtLeastTheMinimumTargetSize() {
+        #expect(TimeGrid.minimumBlockHeight >= 28)
+    }
+
     @Test func occupancyFollowsCapacity() {
         var group = session("2026-10-06", hour: 9, clients: ["Ana"])
         #expect(occupancy(group) == "1/2")

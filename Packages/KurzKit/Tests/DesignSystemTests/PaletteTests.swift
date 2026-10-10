@@ -1,5 +1,6 @@
 #if canImport(AppKit)
 import AppKit
+import SwiftUI
 import Testing
 @testable import DesignSystem
 
@@ -23,6 +24,45 @@ import Testing
         }
         let sorted = [luminance(first), luminance(second)].sorted()
         return (sorted[1] + 0.05) / (sorted[0] + 0.05)
+    }
+
+    private func over(_ color: [Int], _ alpha: Double, _ background: [Int]) -> [Int] {
+        zip(color, background).map { Int((Double($0) * alpha + Double($1) * (1 - alpha)).rounded()) }
+    }
+
+    @Test func contrastHelperMatchesWCAG() {
+        #expect(abs(contrast([255, 255, 255], [0, 0, 0]) - 21) < 0.01)
+        #expect(contrast([0x77, 0x77, 0x77], [0x77, 0x77, 0x77]) == 1)
+        #expect(abs(contrast([255, 255, 255], [0xB4, 0x23, 0x2F]) - 6.52) < 0.01)
+    }
+
+    @Test(arguments: [NSAppearance.Name.aqua, .darkAqua]) func todayNumeralMeetsAAContrast(_ appearance: NSAppearance.Name) {
+        #expect(contrast(rgb("appDestructive", appearance), rgb("appDestructiveForeground", appearance)) >= 4.5)
+    }
+
+    @Test(arguments: [NSAppearance.Name.aqua, .darkAqua]) func categoryColorsStandOutFromTheBackground(_ appearance: NSAppearance.Name) {
+        for name in Color.appCategoryNames {
+            #expect(contrast(rgb(name, appearance), rgb("appBackground", appearance)) >= 3, "\(name)")
+            #expect(contrast(rgb(name, appearance), rgb("appCard", appearance)) >= 3, "\(name)")
+        }
+    }
+
+    @Test(arguments: [NSAppearance.Name.aqua, .darkAqua]) func blockTextStaysReadableOnCategoryTints(_ appearance: NSAppearance.Name) {
+        let alpha = appearance == .aqua ? Color.appCategoryTintOpacity.light : Color.appCategoryTintOpacity.dark
+        for name in Color.appCategoryNames {
+            let tint = over(rgb(name, appearance), alpha, rgb("appBackground", appearance))
+            #expect(contrast(rgb("appForeground", appearance), tint) >= 4.5, "\(name)")
+            #expect(contrast(rgb("appMutedForeground", appearance), tint) >= 4.5, "\(name)")
+        }
+    }
+
+    @Test func lightCategoryColorsKeepTheDesignOrder() {
+        #expect(rgb("appCategoryViolet", .aqua) == [0x98, 0x7B, 0xE9])
+        #expect(rgb("appCategoryOrange", .aqua) == [0xA6, 0x5F, 0x0B])
+        #expect(rgb("appCategoryTeal", .aqua) == [0x1B, 0x93, 0x90])
+        #expect(rgb("appCategoryBlue", .aqua) == [0x36, 0x73, 0xB7])
+        #expect(rgb("appCategoryGreen", .aqua) == [0x50, 0x93, 0x41])
+        #expect(rgb("appCategoryViolet", .darkAqua) == [0xA7, 0x8B, 0xFA])
     }
 
     @Test(arguments: [NSAppearance.Name.aqua, .darkAqua]) func pendingBadgeMeetsAAContrast(_ appearance: NSAppearance.Name) {

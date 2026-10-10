@@ -7,7 +7,7 @@ public struct AgendaView: View {
     let userEmail: String
     let signOut: () -> Void
     @Environment(\.horizontalSizeClass) private var sizeClass
-    @State private var selected: AgendaSession?
+    @Environment(\.dynamicTypeSize) private var typeSize
     @State private var choosingDate = false
     @State private var focusedDay: String?
 
@@ -30,9 +30,9 @@ public struct AgendaView: View {
                 .searchable(text: $model.query, prompt: Text("Search session or client"))
                 .refreshable { await model.refresh() }
                 .toolbar { toolbar }
-                .inspector(isPresented: Binding { selected != nil } set: { if !$0 { selected = nil } }) {
-                    if let selected, case .loaded(let agenda) = model.phase {
-                        SessionDetail(session: selected, timeZone: agenda.timeZone) { self.selected = nil }
+                .inspector(isPresented: Binding { model.selectedSession != nil } set: { if !$0 { model.selection = nil } }) {
+                    if let selected = model.selectedSession, case .loaded(let agenda) = model.phase {
+                        SessionDetail(session: selected, timeZone: agenda.timeZone) { model.selection = nil }
                     }
                 }
         }
@@ -176,7 +176,7 @@ public struct AgendaView: View {
         }
     }
 
-    private var listLayout: Bool { compact && model.period == .week }
+    private var listLayout: Bool { compact && model.period == .week || typeSize.isAccessibilitySize }
 
     @ViewBuilder private var content: some View {
         switch model.phase {
@@ -194,11 +194,11 @@ public struct AgendaView: View {
                 ContentUnavailableView("No sessions", systemImage: "calendar", description: Text(model.period == .day ? "Nothing scheduled for this day." : "Nothing scheduled for this week."))
                     .accessibilityIdentifier("agenda-empty")
             } else if listLayout {
-                WeekList(model: model, days: days, timeZone: agenda.timeZone, focusedDay: $focusedDay) { selected = $0 }
+                WeekList(model: model, days: days, timeZone: agenda.timeZone, focusedDay: $focusedDay)
                     .opacity(model.isStale ? 0.45 : 1)
                     .accessibilityIdentifier("agenda-list")
             } else {
-                TimeGrid(model: model, days: days, timeZone: TimeZone(identifier: agenda.timeZone) ?? .current) { selected = $0 }
+                TimeGrid(model: model, days: days, timeZone: TimeZone(identifier: agenda.timeZone) ?? .current)
                     .accessibilityIdentifier("agenda-list")
             }
         }
@@ -270,33 +270,33 @@ struct WeekStrip: View {
 struct DayNumber: View {
     let text: String
     let today: Bool
+    @ScaledMetric(relativeTo: .subheadline) private var size: CGFloat = 30
 
     var body: some View {
         Text(text)
             .font(.subheadline.weight(today ? .bold : .regular).monospacedDigit())
-            .foregroundStyle(today ? Color.white : Color.appForeground)
-            .frame(width: 30, height: 30)
+            .foregroundStyle(today ? Color.appDestructiveForeground : Color.appForeground)
+            .frame(width: size, height: size)
             .background(today ? Color.appDestructive : .clear, in: Circle())
     }
 }
 
 struct WeekList: View {
-    let model: AgendaModel
+    @Bindable var model: AgendaModel
     let days: [AgendaDay]
     let timeZone: String
     @Binding var focusedDay: String?
-    let select: (AgendaSession) -> Void
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         ScrollViewReader { proxy in
-            List {
+            List(selection: $model.selection) {
                 ForEach(days) { day in
                     Section {
                         ForEach(day.sessions) { session in
                             SessionRow(session: session, timeZone: timeZone)
-                                .contentShape(.rect)
-                                .onTapGesture { select(session) }
-                                .accessibilityAction { select(session) }
+                                .tag(session.id)
+                                .sessionMenu(session, timeZone: timeZone) { model.selection = session.id }
                         }
                     } header: {
                         Text(model.dayTitle(day.date))
@@ -312,7 +312,7 @@ struct WeekList: View {
             .scrollContentBackground(.hidden)
             .onChange(of: focusedDay) {
                 guard let day = focusedDay else { return }
-                withAnimation { proxy.scrollTo(day, anchor: .top) }
+                withAnimation(reduceMotion ? nil : .default) { proxy.scrollTo(day, anchor: .top) }
                 focusedDay = nil
             }
         }
@@ -323,11 +323,11 @@ struct TimeGrid: View {
     let model: AgendaModel
     let days: [AgendaDay]
     let timeZone: TimeZone
-    let select: (AgendaSession) -> Void
-    private let hourHeight: CGFloat = 52
-    private let gutter: CGFloat = 48
+    @ScaledMetric(relativeTo: .caption2) private var hourHeight: CGFloat = 52
+    @ScaledMetric(relativeTo: .caption2) private var gutter: CGFloat = 48
     private let minLaneWidth: CGFloat = 52
-    private let chipWidth: CGFloat = 30
+    private let chipWidth: CGFloat = 32
+    static let minimumBlockHeight: CGFloat = 28
 
     var body: some View {
         let byDate = Dictionary(uniqueKeysWithValues: days.map { ($0.date, $0.sessions) })
@@ -397,15 +397,20 @@ struct TimeGrid: View {
             ForEach(sessions) { session in
                 if let placement = layout.placements[session.id] {
                     let laneWidth = (width - (placement.reservesChip ? chipWidth : 0)) / CGFloat(placement.lanes)
-                    SessionBlock(session: session, timeZone: timeZone, compact: laneWidth < 56)
-                        .frame(width: laneWidth - 3, height: height(session.startsAt, session.endsAt))
-                        .offset(x: CGFloat(placement.lane) * laneWidth + 1.5, y: top(session.startsAt))
-                        .onTapGesture { select(session) }
-                        .accessibilityAction { select(session) }
+                    let selected = model.selection == session.id
+                    Button { model.selection = session.id } label: {
+                        SessionBlock(session: session, timeZone: timeZone, compact: laneWidth < 56, selected: selected)
+                    }
+                    .buttonStyle(SessionButtonStyle())
+                    .accessibilityLabel(spokenSummary(session, timeZone: timeZone.identifier))
+                    .accessibilityAddTraits(selected ? .isSelected : [])
+                    .sessionMenu(session, timeZone: timeZone.identifier) { model.selection = session.id }
+                    .frame(width: laneWidth - 3, height: height(session.startsAt, session.endsAt))
+                    .offset(x: CGFloat(placement.lane) * laneWidth + 1.5, y: top(session.startsAt))
                 }
             }
             ForEach(layout.overflows) { overflow in
-                OverflowChip(sessions: overflow.sessions, timeZone: timeZone, summary: maxLanes == 1, select: select)
+                OverflowChip(sessions: overflow.sessions, timeZone: timeZone, summary: maxLanes == 1, selection: model.selection) { model.selection = $0.id }
                     .frame(width: overflowWidth - 3, height: height(overflow.start, overflow.end))
                     .offset(x: width - overflowWidth + 1.5, y: top(overflow.start))
             }
@@ -435,7 +440,7 @@ struct TimeGrid: View {
 
     private func height(_ start: Date, _ end: Date?) -> CGFloat {
         let duration = (end ?? start.addingTimeInterval(1800)).timeIntervalSince(start) / 3600 * hourHeight - 2
-        return min(max(26, duration), 24 * hourHeight - top(start))
+        return min(max(Self.minimumBlockHeight, duration), 24 * hourHeight - top(start))
     }
 
     private func minutes(_ date: Date) -> Double {
@@ -499,10 +504,12 @@ struct OverflowChip: View {
     let sessions: [AgendaSession]
     let timeZone: TimeZone
     var summary = false
+    var selection: AgendaSession.ID?
     let select: (AgendaSession) -> Void
     @State private var showing = false
 
     var body: some View {
+        let containsSelection = sessions.contains { $0.id == selection }
         Button { showing = true } label: {
             VStack(alignment: summary ? .leading : .center, spacing: 3) {
                 if summary {
@@ -526,14 +533,16 @@ struct OverflowChip: View {
             .padding(.top, 4)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: summary ? .topLeading : .top)
             .background(Color.appMuted, in: RoundedRectangle(cornerRadius: 6))
-            .overlay { RoundedRectangle(cornerRadius: 6).strokeBorder(Color.appBorder) }
+            .overlay { RoundedRectangle(cornerRadius: 6).strokeBorder(containsSelection ? Color.appForeground : Color.appBorder, lineWidth: containsSelection ? 2 : 1) }
             .contentShape(.rect)
         }
-        .buttonStyle(.plain)
+        .buttonStyle(SessionButtonStyle())
         .accessibilityLabel(summary ? Text("\(sessions.count) sessions") : Text("\(sessions.count) more sessions"))
+        .accessibilityAddTraits(containsSelection ? .isSelected : [])
         .popover(isPresented: $showing) {
             VStack(alignment: .leading, spacing: 0) {
                 ForEach(sessions) { session in
+                    let selected = session.id == selection
                     Button {
                         showing = false
                         select(session)
@@ -541,15 +550,23 @@ struct OverflowChip: View {
                         HStack(spacing: 10) {
                             Circle().fill(Color.appCategory(id: session.category?.id, name: session.category?.name)).frame(width: 8, height: 8)
                             Text(session.startsAt.timeOfDay(in: timeZone.identifier)).monospacedDigit().foregroundStyle(Color.appMutedForeground)
-                            Text(session.serviceName ?? session.formTitle).foregroundStyle(Color.appForeground)
+                            VStack(alignment: .leading, spacing: 1) {
+                                Text(session.serviceName ?? session.formTitle).foregroundStyle(Color.appForeground)
+                                if let category = session.category?.name {
+                                    Text(category).font(.caption).foregroundStyle(Color.appMutedForeground)
+                                }
+                            }
                             Spacer(minLength: 12)
                             Text(occupancy(session)).font(.caption).foregroundStyle(Color.appMutedForeground)
+                            Image(systemName: "checkmark").fontWeight(.semibold).foregroundStyle(Color.appPrimary).opacity(selected ? 1 : 0)
                         }
                         .font(.subheadline)
                         .padding(.vertical, 10)
                         .contentShape(.rect)
                     }
-                    .buttonStyle(.plain)
+                    .buttonStyle(SessionButtonStyle())
+                    .accessibilityLabel(spokenSummary(session, timeZone: timeZone.identifier))
+                    .accessibilityAddTraits(selected ? .isSelected : [])
                 }
             }
             .padding(.horizontal)
@@ -576,12 +593,15 @@ struct SessionBlock: View {
     let session: AgendaSession
     let timeZone: TimeZone
     var compact = false
+    var selected = false
+    @Environment(\.colorScheme) private var colorScheme
 
     var body: some View {
         let color = Color.appCategory(id: session.category?.id, name: session.category?.name)
         let shape = RoundedRectangle(cornerRadius: 6)
         let title = session.serviceName ?? session.formTitle
-        let details = session.startsAt.timeOfDay(in: timeZone.identifier) + " · " + occupancy(session)
+        let details = blockDetails(session, timeZone: timeZone.identifier)
+        let tint = colorScheme == .dark ? Color.appCategoryTintOpacity.dark : Color.appCategoryTintOpacity.light
         VStack(alignment: .leading, spacing: 1) {
             if compact {
                 Text(session.startsAt.timeOfDay(in: timeZone.identifier)).font(.caption2.weight(.semibold).monospacedDigit())
@@ -600,22 +620,91 @@ struct SessionBlock: View {
         .foregroundStyle(Color.appForeground)
         .padding(.leading, 7).padding(.trailing, 3).padding(.vertical, 3)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
-        .background(color.opacity(0.22), in: shape)
+        .background(color.opacity(tint), in: shape)
         .overlay(alignment: .leading) { Rectangle().fill(color).frame(width: 3) }
         .overlay {
-            if session.pendingCount > 0 { shape.strokeBorder(color, style: StrokeStyle(lineWidth: 1, dash: [4, 3])) }
+            if selected {
+                shape.strokeBorder(Color.appForeground, lineWidth: 2)
+            } else if session.pendingCount > 0 {
+                shape.strokeBorder(color, style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
+            }
         }
         .clipShape(shape)
         .contentShape(shape)
-        .accessibilityElement(children: .ignore)
-        .accessibilityLabel(Text(verbatim: title + ", " + details))
-        .accessibilityAddTraits(.isButton)
     }
+}
+
+struct SessionButtonStyle: ButtonStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        Highlight(configuration: configuration)
+    }
+
+    private struct Highlight: View {
+        let configuration: Configuration
+        @State private var hovering = false
+
+        var body: some View {
+            configuration.label
+                .overlay {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.appForeground.opacity(configuration.isPressed ? 0.12 : hovering ? 0.06 : 0))
+                        .allowsHitTesting(false)
+                }
+                .onHover { hovering = $0 }
+        }
+    }
+}
+
+extension View {
+    func sessionMenu(_ session: AgendaSession, timeZone: String, open: @escaping () -> Void) -> some View {
+        contextMenu {
+            Button("Open", systemImage: "sidebar.right", action: open)
+            Button("Copy time", systemImage: "clock") { copyToPasteboard(sessionWhen(session, timeZone: timeZone)) }
+            Button("Copy clients", systemImage: "person.2") { copyToPasteboard(clientList(session)) }
+                .disabled(session.appointments.isEmpty)
+        }
+    }
+}
+
+func copyToPasteboard(_ text: String) {
+    #if canImport(UIKit)
+    UIPasteboard.general.string = text
+    #else
+    NSPasteboard.general.clearContents()
+    NSPasteboard.general.setString(text, forType: .string)
+    #endif
+}
+
+func sessionWhen(_ session: AgendaSession, timeZone: String) -> String {
+    let day = session.startsAt.formatted(Date.FormatStyle(timeZone: TimeZone(identifier: timeZone) ?? .current).weekday(.wide).day().month(.wide))
+    return [day, timeRange(session, timeZone: timeZone)].joined(separator: " · ")
+}
+
+func timeRange(_ session: AgendaSession, timeZone: String) -> String {
+    [session.startsAt, session.endsAt].compactMap { $0?.timeOfDay(in: timeZone) }.joined(separator: "–")
+}
+
+func clientList(_ session: AgendaSession) -> String {
+    session.appointments.map { $0.clientName ?? "—" }.joined(separator: "\n")
+}
+
+func rowSubtitle(_ session: AgendaSession) -> String {
+    let occupancyText = session.capacity == 1 && !session.appointments.isEmpty ? nil : occupancy(session)
+    return [session.category?.name, session.formTitle, occupancyText].compactMap { $0 }.joined(separator: " · ")
+}
+
+func blockDetails(_ session: AgendaSession, timeZone: String) -> String {
+    [session.category?.name, session.startsAt.timeOfDay(in: timeZone), occupancy(session)].compactMap { $0 }.joined(separator: " · ")
+}
+
+func spokenSummary(_ session: AgendaSession, timeZone: String) -> String {
+    [session.serviceName ?? session.formTitle, session.category?.name, timeRange(session, timeZone: timeZone), occupancy(session)].compactMap { $0 }.joined(separator: ", ")
 }
 
 struct SessionRow: View {
     let session: AgendaSession
     let timeZone: String
+    @ScaledMetric(relativeTo: .subheadline) private var timeWidth: CGFloat = 52
 
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
@@ -624,13 +713,13 @@ struct SessionRow: View {
                 if let end = session.endsAt { Text(end.timeOfDay(in: timeZone)).foregroundStyle(Color.appMutedForeground) }
             }
             .font(.subheadline.monospacedDigit())
-            .frame(width: 52, alignment: .trailing)
+            .frame(width: timeWidth, alignment: .trailing)
 
             Capsule().fill(Color.appCategory(id: session.category?.id, name: session.category?.name)).frame(width: 4)
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(session.serviceName ?? session.formTitle).font(.headline).foregroundStyle(Color.appForeground)
-                Text(session.capacity == 1 && !session.appointments.isEmpty ? session.formTitle : session.formTitle + " · " + occupancy(session)).font(.caption).foregroundStyle(Color.appMutedForeground)
+                Text(rowSubtitle(session)).font(.caption).foregroundStyle(Color.appMutedForeground)
                 ForEach(session.appointments) { appointment in
                     HStack {
                         Label(appointment.clientName ?? "—", systemImage: "person")
@@ -652,57 +741,62 @@ struct SessionDetail: View {
     let close: () -> Void
 
     var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    LabeledContent("Form", value: session.formTitle)
-                    LabeledContent("Category") {
-                        Label {
-                            Text(session.category?.name ?? "—")
-                        } icon: {
-                            Image(systemName: "circle.fill").foregroundStyle(Color.appCategory(id: session.category?.id, name: session.category?.name))
-                        }
-                    }
-                    LabeledContent("Occupancy", value: occupancy(session))
-                    if let capacity = session.capacity, capacity > 1 {
-                        ProgressView(value: Double(min(session.appointments.count, capacity)), total: Double(capacity)).tint(Color.appPrimary)
+        List {
+            Section {
+                LabeledContent("Form", value: session.formTitle)
+                LabeledContent("Category") {
+                    HStack(spacing: 6) {
+                        Circle().fill(Color.appCategory(id: session.category?.id, name: session.category?.name)).frame(width: 10, height: 10)
+                        Text(session.category?.name ?? "—")
                     }
                 }
-                Section("Clients · \(session.appointments.count)") {
-                    ForEach(session.appointments) { appointment in
-                        HStack(spacing: 10) {
-                            Text(initials(appointment.clientName))
-                                .font(.caption.weight(.semibold))
-                                .frame(width: 30, height: 30)
-                                .background(Color.appAccent, in: Circle())
-                                .foregroundStyle(Color.appAccentForeground)
-                            Text(appointment.clientName ?? "—").foregroundStyle(Color.appForeground)
-                            Spacer()
-                            Text(appointment.series ? "Monthly plan" : "Single")
-                                .font(.caption2.weight(.semibold))
-                                .padding(.horizontal, 8).padding(.vertical, 3)
-                                .background(Color.appMuted, in: Capsule())
-                                .foregroundStyle(Color.appMutedForeground)
-                            StatusBadge(status: appointment.status)
-                        }
-                        .accessibilityElement(children: .combine)
-                    }
+                LabeledContent("Occupancy", value: occupancy(session))
+                if let capacity = session.capacity, capacity > 1 {
+                    ProgressView(value: Double(min(session.appointments.count, capacity)), total: Double(capacity)).tint(Color.appPrimary)
                 }
             }
-            .navigationTitle(session.serviceName ?? session.formTitle)
-            .navigationSubtitle(when)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Close", systemImage: "xmark", action: close).keyboardShortcut(.cancelAction)
+            Section("Clients · \(session.appointments.count)") {
+                ForEach(session.appointments) { appointment in
+                    HStack(spacing: 10) {
+                        Text(initials(appointment.clientName))
+                            .font(.caption.weight(.semibold))
+                            .frame(width: 30, height: 30)
+                            .background(Color.appAccent, in: Circle())
+                            .foregroundStyle(Color.appAccentForeground)
+                        Text(appointment.clientName ?? "—").foregroundStyle(Color.appForeground)
+                        Spacer()
+                        Text(appointment.series ? "Monthly plan" : "Single")
+                            .font(.caption2.weight(.semibold))
+                            .padding(.horizontal, 8).padding(.vertical, 3)
+                            .background(Color.appMuted, in: Capsule())
+                            .foregroundStyle(Color.appMutedForeground)
+                        StatusBadge(status: appointment.status)
+                    }
+                    .accessibilityElement(children: .combine)
                 }
             }
         }
+        .safeAreaInset(edge: .top, spacing: 0) {
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(session.serviceName ?? session.formTitle)
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(Color.appForeground)
+                        .accessibilityAddTraits(.isHeader)
+                    Text(sessionWhen(session, timeZone: timeZone))
+                        .font(.subheadline)
+                        .foregroundStyle(Color.appMutedForeground)
+                }
+                Spacer(minLength: 0)
+                Button("Close", systemImage: "xmark", action: close)
+                    .labelStyle(.iconOnly)
+                    .buttonStyle(.glass)
+                    .buttonBorderShape(.circle)
+                    .keyboardShortcut(.cancelAction)
+            }
+            .padding()
+        }
         .presentationDetents([.medium, .large])
-    }
-
-    private var when: String {
-        let day = session.startsAt.formatted(Date.FormatStyle(timeZone: TimeZone(identifier: timeZone) ?? .current).weekday(.wide).day().month(.wide))
-        return [day, [session.startsAt, session.endsAt].compactMap { $0.map { $0.timeOfDay(in: timeZone) } }.joined(separator: "–")].joined(separator: " · ")
     }
 
     private func initials(_ name: String?) -> String {

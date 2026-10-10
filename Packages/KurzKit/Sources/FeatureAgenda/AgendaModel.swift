@@ -40,6 +40,7 @@ public final class AgendaModel {
     public var hiddenForms: Set<String> = []
     public var hiddenCategories: Set<String> = []
     public var onlyPending = false
+    public var selection: AgendaSession.ID?
     public private(set) var calendar: Calendar
     var loadedKeys: Set<String> = []
     private let load: @Sendable (_ from: String, _ to: String) async throws -> AgendaResponse
@@ -120,6 +121,11 @@ public final class AgendaModel {
         guard case .loaded(let response) = phase else { return [] }
         let keys = isStale ? loadedKeys : Set(dates.map(key))
         return response.sessions.filter { keys.contains($0.date) }
+    }
+
+    public var selectedSession: AgendaSession? {
+        guard let selection, case .loaded(let response) = phase else { return nil }
+        return response.sessions.first { $0.id == selection }
     }
 
     public var isFiltering: Bool { onlyPending || !hiddenForms.isEmpty || !hiddenCategories.isEmpty }
