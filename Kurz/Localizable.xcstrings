@@ -1,682 +1,741 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "%@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@"
+  "sourceLanguage": "en",
+  "strings": {
+    "%@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@"
           }
         }
       }
     },
-    "%@: %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@: %@"
+    "%@: %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: %@"
           }
         }
       }
     },
-    "Account" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conta"
+    "Account": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conta"
           }
         }
       }
     },
-    "Apple Intelligence doesn't support your language yet." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A Apple Intelligence ainda não suporta o seu idioma."
+    "Apple Intelligence doesn't support your language yet.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A Apple Intelligence ainda não suporta o seu idioma."
           }
         }
       }
     },
-    "Can't reach Kurz" : {
-
-    },
-    "Check your connection and try again." : {
-
-    },
-    "Check your e-mail" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verifique o seu e-mail"
+    "Can't reach Kurz": {},
+    "Check your connection and try again.": {},
+    "Check your e-mail": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verifique o seu e-mail"
           }
         }
       }
     },
-    "Code" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Código"
+    "Code": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Código"
           }
         }
       }
     },
-    "Couldn't load your schedule" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Não foi possível carregar a agenda"
+    "Couldn't load your schedule": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível carregar a agenda"
           }
         }
       }
     },
-    "Create account" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Criar conta"
+    "Couldn't send the code. Check the e-mail and try again.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível enviar o código. Verifique o e-mail e tente novamente."
           }
         }
       }
     },
-    "Don't have an account yet?" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ainda não tem conta?"
+    "Create account": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Criar conta"
           }
         }
       }
     },
-    "E-mail" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E-mail"
+    "Don't have an account yet?": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ainda não tem conta?"
           }
         }
       }
     },
-    "E-mail me a code" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enviar-me um código por e-mail"
+    "E-mail": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-mail"
           }
         }
       }
     },
-    "Enter your e-mail first, then we send you a code." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Introduza primeiro o seu e-mail e depois enviamos-lhe um código."
+    "E-mail me a code": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviar-me um código por e-mail"
           }
         }
       }
     },
-    "Forgot your password?" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esqueceu-se da palavra-passe?"
+    "Forgot your password?": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esqueceu-se da palavra-passe?"
           }
         }
       }
     },
-    "Generated on device with Apple Intelligence" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gerado no aparelho com Apple Intelligence"
+    "Generated on device with Apple Intelligence": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gerado no aparelho com Apple Intelligence"
           }
         }
       }
     },
-    "HTTP error" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "erro HTTP"
+    "HTTP error": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "erro HTTP"
           }
         }
       }
     },
-    "Invalid MCP response" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resposta MCP inválida"
+    "Invalid MCP response": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resposta MCP inválida"
           }
         }
       }
     },
-    "Invalid token response" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resposta de token inválida"
+    "Invalid token response": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resposta de token inválida"
           }
         }
       }
     },
-    "Kurz has sent all the e-mails it can for now. Please try again later." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O Kurz já enviou todos os e-mails que podia por agora. Tente novamente mais tarde."
+    "Login refused: %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Login recusado: %@"
           }
         }
       }
     },
-    "Login refused: %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Login recusado: %@"
+    "Login rejected: invalid response": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Login rejeitado: resposta inválida"
           }
         }
       }
     },
-    "Login rejected: invalid response" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Login rejeitado: resposta inválida"
+    "Login rejected: unexpected issuer (%@)": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Login rejeitado: emissor inesperado (%@)"
           }
         }
       }
     },
-    "Login rejected: unexpected issuer (%@)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Login rejeitado: emissor inesperado (%@)"
+    "MCP error": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erro MCP"
           }
         }
       }
     },
-    "MCP error" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erro MCP"
+    "MCP replied with HTTP %lld": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP respondeu HTTP %lld"
           }
         }
       }
     },
-    "MCP replied with HTTP %lld" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MCP respondeu HTTP %lld"
+    "MCP response had no result": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resposta MCP sem resultado"
           }
         }
       }
     },
-    "MCP response had no result" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resposta MCP sem resultado"
+    "missing": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ausente"
           }
         }
       }
     },
-    "New sign-ups are paused for today. If you already have an account, you can still sign in." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "As novas inscrições estão suspensas por hoje. Se já tem conta, pode continuar a entrar."
+    "No registered client": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem cliente registrado"
           }
         }
       }
     },
-    "No registered client" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sem cliente registrado"
+    "No schedule tool on the server. Available tools: %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhuma tool de agenda no servidor. Tools disponíveis: %@"
           }
         }
       }
     },
-    "No schedule tool on the server. Available tools: %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nenhuma tool de agenda no servidor. Tools disponíveis: %@"
+    "Nothing scheduled": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nada agendado"
           }
         }
       }
     },
-    "Nothing scheduled" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nada agendado"
+    "Now": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agora"
           }
         }
       }
     },
-    "Now" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agora"
+    "Password": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Palavra-passe"
           }
         }
       }
     },
-    "Password" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Palavra-passe"
+    "Refresh": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atualizar"
           }
         }
       }
     },
-    "Refresh" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atualizar"
+    "Registration returned no client_id": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O registro não devolveu client_id"
           }
         }
       }
     },
-    "Registration returned no client_id" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O registro não devolveu client_id"
+    "Schedule": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agenda"
           }
         }
       }
     },
-    "Resend code" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Reenviar código"
+    "Sign in": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entrar"
           }
         }
       }
     },
-    "Schedule" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agenda"
+    "Sign in to Kurz": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entrar no Kurz"
           }
         }
       }
     },
-    "Sign in" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entrar"
+    "Sign in to see your appointments. Access is read-only and the summary is generated on your device with Apple Intelligence.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entre para ver seus compromissos. O acesso é somente leitura e o resumo é feito no próprio aparelho com Apple Intelligence."
           }
         }
       }
     },
-    "Sign in to Kurz" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entrar no Kurz"
+    "Sign in with Kurz": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entrar com Kurz"
           }
         }
       }
     },
-    "Sign in to see your appointments. Access is read-only and the summary is generated on your device with Apple Intelligence." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entre para ver seus compromissos. O acesso é somente leitura e o resumo é feito no próprio aparelho com Apple Intelligence."
+    "Sign out": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sair"
           }
         }
       }
     },
-    "Sign in with Kurz" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entrar com Kurz"
+    "Summary": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resumo"
           }
         }
       }
     },
-    "Sign out" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sair"
+    "That code is wrong or expired.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esse código está errado ou expirou."
           }
         }
       }
     },
-    "Signing in…" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A entrar…"
+    "The model is still downloading. Try again in a few minutes.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O modelo ainda está sendo baixado. Tente em alguns minutos."
           }
         }
       }
     },
-    "Something went wrong, please try again later." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Algo correu mal, tente novamente mais tarde."
+    "This device doesn't support Apple Intelligence.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este aparelho não suporta Apple Intelligence."
           }
         }
       }
     },
-    "Summary" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resumo"
+    "Today": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoje"
           }
         }
       }
     },
-    "That code is wrong or expired. Request a new one if needed." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esse código está errado ou expirou. Peça um novo, se necessário."
+    "Tomorrow": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Amanhã"
           }
         }
       }
     },
-    "That doesn't look like a valid e-mail address." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Isso não parece um endereço de e-mail válido."
+    "Try again": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tentar de novo"
           }
         }
       }
     },
-    "The model is still downloading. Try again in a few minutes." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O modelo ainda está sendo baixado. Tente em alguns minutos."
+    "Turn on Apple Intelligence in Settings.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ative a Apple Intelligence em Ajustes."
           }
         }
       }
     },
-    "This device doesn't support Apple Intelligence." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este aparelho não suporta Apple Intelligence."
+    "Undated": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem data"
           }
         }
       }
     },
-    "Today" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hoje"
+    "Updated at %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atualizado às %@"
           }
         }
       }
     },
-    "Tomorrow" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Amanhã"
+    "Use another e-mail": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usar outro e-mail"
           }
         }
       }
     },
-    "Too many attempts. Please wait a few minutes and try again." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Demasiadas tentativas. Aguarde alguns minutos e tente novamente."
+    "Verify and sign in": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verificar e entrar"
           }
         }
       }
     },
-    "Try again" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tentar de novo"
+    "We sent a 7-digit code to %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviámos um código de 7 dígitos para %@"
           }
         }
       }
     },
-    "Turn on Apple Intelligence in Settings." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ative a Apple Intelligence em Ajustes."
+    "Wrong e-mail or password.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-mail ou palavra-passe errados."
           }
         }
       }
     },
-    "Undated" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sem data"
+    "Your Kurz schedule": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sua agenda do Kurz"
           }
         }
       }
     },
-    "Updated at %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atualizado às %@"
+    "Your next 7 days are free.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seus próximos 7 dias estão livres."
           }
         }
       }
     },
-    "Use another e-mail" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar outro e-mail"
+    "Pending approval": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aguardando aprovação"
           }
         }
       }
     },
-    "Verify and sign in" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verificar e entrar"
+    "No pending approvals": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem aprovações pendentes"
           }
         }
       }
     },
-    "We can't send e-mails to that address. Temporary and disposable addresses aren't accepted." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Não conseguimos enviar e-mails para esse endereço. Endereços temporários e descartáveis não são aceites."
+    "Nothing is waiting for your approval.": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nada aguarda a sua aprovação."
           }
         }
       }
     },
-    "We sent a 7-digit code to %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enviámos um código de 7 dígitos para %@"
+    "Enter your e-mail first, then we send you a code.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Introduza primeiro o seu e-mail e depois enviamos-lhe um código."
           }
         }
       }
     },
-    "Wrong e-mail or password. Too many attempts pause password sign-in for a while." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E-mail ou palavra-passe errados. Demasiadas tentativas suspendem o acesso por palavra-passe durante algum tempo."
+    "Kurz has sent all the e-mails it can for now. Please try again later.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O Kurz já enviou todos os e-mails que podia por agora. Tente novamente mais tarde."
           }
         }
       }
     },
-    "Your Kurz schedule" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sua agenda do Kurz"
+    "New sign-ups are paused for today. If you already have an account, you can still sign in.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "As novas inscrições estão suspensas por hoje. Se já tem conta, pode continuar a entrar."
           }
         }
       }
     },
-    "Your next 7 days are free." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seus próximos 7 dias estão livres."
+    "Resend code": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reenviar código"
           }
         }
       }
     },
-    "missing" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ausente"
+    "Signing in…": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A entrar…"
+          }
+        }
+      }
+    },
+    "Something went wrong, please try again later.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Algo correu mal, tente novamente mais tarde."
+          }
+        }
+      }
+    },
+    "That code is wrong or expired. Request a new one if needed.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esse código está errado ou expirou. Peça um novo, se necessário."
+          }
+        }
+      }
+    },
+    "That doesn't look like a valid e-mail address.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Isso não parece um endereço de e-mail válido."
+          }
+        }
+      }
+    },
+    "Too many attempts. Please wait a few minutes and try again.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demasiadas tentativas. Aguarde alguns minutos e tente novamente."
+          }
+        }
+      }
+    },
+    "We can't send e-mails to that address. Temporary and disposable addresses aren't accepted.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não conseguimos enviar e-mails para esse endereço. Endereços temporários e descartáveis não são aceites."
+          }
+        }
+      }
+    },
+    "Wrong e-mail or password. Too many attempts pause password sign-in for a while.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-mail ou palavra-passe errados. Demasiadas tentativas suspendem o acesso por palavra-passe durante algum tempo."
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }
