@@ -31,6 +31,21 @@ final class LoginE2ETests: XCTestCase {
         XCTAssertTrue(app.textFields["email-field"].waitForExistence(timeout: 10))
     }
 
+    @MainActor func testLoginOffersGoogleAboveTheEmailForm() {
+        let app = launch()
+        let google = app.buttons["google-button"]
+        XCTAssertTrue(google.waitForExistence(timeout: 10))
+        XCTAssertTrue(google.isEnabled)
+        let divider = app.staticTexts["login-divider"]
+        XCTAssertTrue(divider.exists)
+        XCTAssertTrue(["or", "ou"].contains(divider.label))
+        XCTAssertLessThan(google.frame.maxY, app.textFields["email-field"].frame.minY)
+        let shot = XCTAttachment(screenshot: app.screenshot())
+        shot.name = "login"
+        shot.lifetime = .keepAlways
+        add(shot)
+    }
+
     @MainActor func testPasswordSignInShowsTheAgenda() {
         let app = launch()
         let email = app.textFields["email-field"]

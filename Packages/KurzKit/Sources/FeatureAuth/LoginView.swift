@@ -1,3 +1,4 @@
+import AuthenticationServices
 import Auth
 import DesignSystem
 import Networking
@@ -10,11 +11,14 @@ public struct LoginView: View {
     @State private var code = ""
     @State private var codeSent = false
     @State private var isLoading = false
+    @State private var isGoogleLoading = false
     @State private var error: LocalizedStringKey?
     @FocusState private var focus: Field?
+    @Environment(\.webAuthenticationSession) private var webAuthenticationSession
 
     private static let codeLength = 7
     private static let webURL = URL(string: "https://kurz.fyi")!
+    private static let google = GoogleSignInService()
 
     private enum Field { case email, password, code }
 
@@ -27,7 +31,7 @@ public struct LoginView: View {
                     KurzLogo(size: 56)
                     header
                     VStack(spacing: 16) {
-                        if codeSent { codeStep } else { credentialsStep }
+                        if codeSent { codeStep } else { googleStep; credentialsStep }
                         if let error {
                             Text(error).font(.footnote).foregroundStyle(Color.appDestructive).multilineTextAlignment(.center)
                                 .accessibilityIdentifier("login-error")
@@ -76,6 +80,22 @@ public struct LoginView: View {
         return link
     }
 
+    @ViewBuilder private var googleStep: some View {
+        Button { Task { await signInWithGoogle() } } label: {
+            HStack(spacing: 10) {
+                if isGoogleLoading { ProgressView().controlSize(.small) } else { GoogleMark().frame(width: 18, height: 18) }
+                Text("Continue with Google")
+            }
+        }
+        .buttonStyle(OutlineButtonStyle()).disabled(isLoading)
+        .accessibilityIdentifier("google-button")
+        HStack(spacing: 12) {
+            Rectangle().fill(Color.appBorder).frame(height: 1)
+            Text("or").font(.footnote).foregroundStyle(Color.appMutedForeground).accessibilityIdentifier("login-divider")
+            Rectangle().fill(Color.appBorder).frame(height: 1)
+        }
+    }
+
     @ViewBuilder private var credentialsStep: some View {
         field("E-mail", focusOn: .email) {
             TextField("E-mail", text: $email, prompt: Text(""))
@@ -122,7 +142,7 @@ public struct LoginView: View {
     private var normalizedEmail: String { email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }
 
     private func label(_ title: LocalizedStringKey) -> some View {
-        Group { if isLoading { Text("Signing in…").fontWeight(.semibold) } else { Text(title).fontWeight(.semibold) } }.frame(maxWidth: .infinity)
+        Group { if isLoading && !isGoogleLoading { Text("Signing in…").fontWeight(.semibold) } else { Text(title).fontWeight(.semibold) } }.frame(maxWidth: .infinity)
     }
 
     private func field<Content: View>(_ title: LocalizedStringKey, focusOn: Field, @ViewBuilder trailing: () -> some View = { EmptyView() }, @ViewBuilder content: () -> Content) -> some View {
@@ -136,7 +156,7 @@ public struct LoginView: View {
         }
     }
 
-    private func perform(_ describe: @escaping (Error) -> LocalizedStringKey, _ work: () async throws -> Void) async {
+    private func perform(_ describe: @escaping (Error) -> LocalizedStringKey?, _ work: () async throws -> Void) async {
         guard !isLoading else { return }
         isLoading = true
         error = nil
@@ -146,6 +166,23 @@ public struct LoginView: View {
 
     private func signInWithPassword() async {
         await perform({ failure($0, unauthorized: "Wrong e-mail or password. Too many attempts pause password sign-in for a while.") }) { try await session.signIn(email: normalizedEmail, password: password) }
+    }
+
+    private func signInWithGoogle() async {
+        isGoogleLoading = true
+        defer { isGoogleLoading = false }
+        await perform(googleFailure) {
+            let request = Self.google.makeRequest()
+            let callback = try await webAuthenticationSession.authenticate(using: request.url, callback: .customScheme(Self.google.callbackScheme), additionalHeaderFields: [:])
+            try await session.signInWithGoogle(idToken: try await Self.google.idToken(for: request, callback: callback))
+        }
+    }
+
+    private func googleFailure(_ error: Error) -> LocalizedStringKey? {
+        if error is CancellationError || (error as? ASWebAuthenticationSessionError)?.code == .canceledLogin { return nil }
+        if error is GoogleSignInService.Failure { return "Google sign-in did not go through. Please try again." }
+        if case .server(404, _) = error as? APIError { return "Google sign-in isn't available right now." }
+        return failure(error, unauthorized: "Google sign-in did not go through. Please try again.")
     }
 
     private func requestCode() {
@@ -158,6 +195,9 @@ public struct LoginView: View {
         switch api {
         case .unauthorized: return unauthorized
         case .server(429, _): return "Too many attempts. Please wait a few minutes and try again."
+        case .server(403, _): return "Your account has been deactivated. Contact support if you believe this is a mistake."
+        case .server(_, "google_invalid_token"): return "Google sign-in did not go through. Please try again."
+        case .server(_, "google_email_not_verified"): return "Your Google account e-mail is not verified yet, so it can't be used to sign in."
         case .server(_, "invalid_email"): return "That doesn't look like a valid e-mail address."
         case .server(_, "undeliverable_email"): return "We can't send e-mails to that address. Temporary and disposable addresses aren't accepted."
         case .server(_, "new_address_limit"): return "New sign-ups are paused for today. If you already have an account, you can still sign in."
@@ -206,5 +246,29 @@ private extension View {
         overlay(alignment: .leading) {
             if isEmpty { Text(verbatim: text).foregroundStyle(Color.appPlaceholder).allowsHitTesting(false).accessibilityHidden(true) }
         }
+    }
+}
+
+private struct GoogleMark: View {
+    var body: some View {
+        GeometryReader { geometry in
+            let size = min(geometry.size.width, geometry.size.height)
+            let line = size * 0.2
+            ZStack {
+                arc(0, 0.125, 0x4285F4, line)
+                arc(0.125, 0.375, 0x34A853, line)
+                arc(0.375, 0.6, 0xFBBC05, line)
+                arc(0.6, 0.875, 0xEA4335, line)
+                Rectangle().fill(Color(hex: 0x4285F4)).frame(width: size / 2, height: line).offset(x: size / 4)
+            }
+            .padding(line / 2)
+            .frame(width: size, height: size)
+        }
+        .aspectRatio(1, contentMode: .fit)
+        .accessibilityHidden(true)
+    }
+
+    private func arc(_ from: CGFloat, _ to: CGFloat, _ hex: UInt32, _ line: CGFloat) -> some View {
+        Circle().trim(from: from, to: to).stroke(Color(hex: hex), style: StrokeStyle(lineWidth: line))
     }
 }

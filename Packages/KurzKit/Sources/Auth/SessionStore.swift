@@ -27,6 +27,10 @@ public final class SessionStore {
         state = .signedIn(try await auth.signIn(email: email, password: password))
     }
 
+    public func signInWithGoogle(idToken: String) async throws {
+        state = .signedIn(try await auth.signInWithGoogle(idToken: idToken))
+    }
+
     public func signOut() async {
         await auth.signOut()
         state = .signedOut

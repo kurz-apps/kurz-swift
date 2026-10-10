@@ -1185,6 +1185,66 @@
           }
         }
       }
+    },
+    "Continue with Google": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuar com o Google"
+          }
+        }
+      }
+    },
+    "or": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ou"
+          }
+        }
+      }
+    },
+    "Google sign-in did not go through. Please try again.": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O início de sessão com o Google não foi concluído. Tente novamente."
+          }
+        }
+      }
+    },
+    "Your Google account e-mail is not verified yet, so it can't be used to sign in.": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O e-mail da sua conta Google ainda não está verificado, por isso não pode ser usado para entrar."
+          }
+        }
+      }
+    },
+    "Your account has been deactivated. Contact support if you believe this is a mistake.": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A sua conta foi desativada. Contacte o suporte se acha que é um engano."
+          }
+        }
+      }
+    },
+    "Google sign-in isn't available right now.": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O início de sessão com o Google não está disponível de momento."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

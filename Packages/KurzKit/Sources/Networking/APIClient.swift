@@ -51,6 +51,15 @@ public struct APIClient: Sendable {
     }
 
     public func raw<R>(_ endpoint: Endpoint<R>) async throws -> (Data, HTTPURLResponse) {
+        let (data, http) = try await unchecked(endpoint)
+        switch http.statusCode {
+        case 200..<300: return (data, http)
+        case 401: throw APIError.unauthorized
+        default: throw APIError.server(status: http.statusCode, message: Self.message(in: data))
+        }
+    }
+
+    public func unchecked<R>(_ endpoint: Endpoint<R>) async throws -> (Data, HTTPURLResponse) {
         guard var url = URLComponents(url: configuration.baseURL.appending(path: endpoint.path), resolvingAgainstBaseURL: false) else {
             throw APIError.invalidResponse
         }
@@ -65,13 +74,11 @@ public struct APIClient: Sendable {
 
         let (data, response) = try await configuration.session.data(for: request)
         guard let http = response as? HTTPURLResponse else { throw APIError.invalidResponse }
-        switch http.statusCode {
-        case 200..<300: return (data, http)
-        case 401: throw APIError.unauthorized
-        default:
-            let message = (try? JSONSerialization.jsonObject(with: data) as? [String: Any]).flatMap { $0["error"] as? String ?? $0["message"] as? String }
-            throw APIError.server(status: http.statusCode, message: message)
-        }
+        return (data, http)
+    }
+
+    public static func message(in data: Data) -> String? {
+        (try? JSONSerialization.jsonObject(with: data) as? [String: Any]).flatMap { $0["error"] as? String ?? $0["message"] as? String }
     }
 
     public static let decoder: JSONDecoder = {

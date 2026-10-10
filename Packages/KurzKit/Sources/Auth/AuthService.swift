@@ -12,11 +12,7 @@ public struct AuthService: Sendable {
     }
 
     public func signIn(email: String, password: String) async throws -> CurrentUser {
-        let (data, http) = try await api.raw(try .post("api/login/password", json: ["email": email, "password": password]) as Endpoint<UserEnvelope>)
-        guard let token = http.sessionToken else { throw APIError.invalidResponse }
-        let user = try APIClient.decoder.decode(UserEnvelope.self, from: data).user
-        store.save(token)
-        return user
+        try start(try await api.raw(try .post("api/login/password", json: ["email": email, "password": password]) as Endpoint<UserEnvelope>))
     }
 
     public func requestCode(email: String, locale: String? = nil) async throws {
@@ -24,9 +20,18 @@ public struct AuthService: Sendable {
     }
 
     public func verify(email: String, code: String) async throws -> CurrentUser {
-        let (data, http) = try await api.raw(try .post("api/login_verify", json: ["email": email, "code": code]) as Endpoint<UserEnvelope>)
-        guard let token = http.sessionToken else { throw APIError.invalidResponse }
-        let user = try APIClient.decoder.decode(UserEnvelope.self, from: data).user
+        try start(try await api.raw(try .post("api/login_verify", json: ["email": email, "code": code]) as Endpoint<UserEnvelope>))
+    }
+
+    public func signInWithGoogle(idToken: String) async throws -> CurrentUser {
+        let (data, http) = try await api.unchecked(try .post("api/login/google", json: ["credential": idToken]) as Endpoint<UserEnvelope>)
+        guard (200..<300).contains(http.statusCode) else { throw APIError.server(status: http.statusCode, message: APIClient.message(in: data)) }
+        return try start((data, http))
+    }
+
+    private func start(_ response: (Data, HTTPURLResponse)) throws -> CurrentUser {
+        guard let token = response.1.sessionToken else { throw APIError.invalidResponse }
+        let user = try APIClient.decoder.decode(UserEnvelope.self, from: response.0).user
         store.save(token)
         return user
     }

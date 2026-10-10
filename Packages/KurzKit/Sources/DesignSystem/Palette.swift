@@ -46,3 +46,31 @@ public struct PrimaryButtonStyle: ButtonStyle {
             .opacity(isEnabled ? 1 : 0.45)
     }
 }
+
+public struct OutlineButtonStyle: ButtonStyle {
+    public init() {}
+
+    public func makeBody(configuration: Configuration) -> some View {
+        OutlineButton(configuration: configuration)
+    }
+
+    private struct OutlineButton: View {
+        let configuration: ButtonStyleConfiguration
+        @Environment(\.isEnabled) private var isEnabled
+        @State private var isHovered = false
+
+        var body: some View {
+            let shape = RoundedRectangle(cornerRadius: 12)
+            configuration.label
+                .fontWeight(.medium)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 13)
+                .foregroundStyle(Color.appForeground)
+                .background(configuration.isPressed ? Color.appMuted : isHovered && isEnabled ? Color.appMuted.opacity(0.6) : Color.appCard, in: shape)
+                .overlay(shape.stroke(Color.appBorder, lineWidth: 1))
+                .contentShape(shape)
+                .onHover { isHovered = $0 }
+                .opacity(isEnabled ? 1 : 0.45)
+        }
+    }
+}
