@@ -21,6 +21,7 @@ let package = Package(
         .target(name: "FeatureAuth", dependencies: ["Auth", "DesignSystem"]),
         .target(name: "FeatureAgenda", dependencies: ["Domain", "Networking", "DesignSystem"]),
         .target(name: "FeatureShell", dependencies: ["Domain", "Networking", "DesignSystem", "FeatureAgenda"]),
+        .testTarget(name: "FeatureAuthTests", dependencies: ["FeatureAuth", "Networking"]),
         .testTarget(name: "FeatureShellTests", dependencies: ["FeatureShell", "Domain"]),
         .testTarget(name: "FeatureAgendaTests", dependencies: ["FeatureAgenda", "Domain", "DesignSystem"]),
         .testTarget(name: "DesignSystemTests", dependencies: ["DesignSystem"]),

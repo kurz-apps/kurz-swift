@@ -34,6 +34,15 @@ private final class Stub: URLProtocol, @unchecked Sendable {
         #expect(r.someValue == 4)
     }
 
+    @Test func rateLimitCarriesRetryAfterSeconds() async {
+        Stub.handler = { _ in (429, ["Retry-After": "42"], Data()) }
+        await #expect(throws: APIError.rateLimited(retryAfter: 42)) { try await client().send(Endpoint<Ping>("GET", "x")) }
+        Stub.handler = { _ in (429, ["Retry-After": "Wed, 21 Oct 2026 07:28:00 GMT"], Data()) }
+        await #expect(throws: APIError.rateLimited(retryAfter: nil)) { try await client().send(Endpoint<Ping>("GET", "x")) }
+        Stub.handler = { _ in (429, [:], Data()) }
+        await #expect(throws: APIError.rateLimited(retryAfter: nil)) { try await client().send(Endpoint<Ping>("GET", "x")) }
+    }
+
     @Test func mapsStatusCodes() async {
         Stub.handler = { _ in (401, [:], Data()) }
         await #expect(throws: APIError.unauthorized) { try await client().send(Endpoint<Ping>("GET", "x")) }
