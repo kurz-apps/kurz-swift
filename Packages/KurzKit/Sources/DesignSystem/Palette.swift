@@ -1,18 +1,18 @@
 import SwiftUI
 
 public extension Color {
-    static let appBackground = adaptive(light: 0xF7F8FA, dark: 0x101418)
-    static let appForeground = adaptive(light: 0x111827, dark: 0xEEF2F5)
-    static let appCard = adaptive(light: 0xFFFFFF, dark: 0x151B20)
-    static let appMuted = adaptive(light: 0xEEF2F5, dark: 0x1D252C)
-    static let appMutedForeground = adaptive(light: 0x5D6675, dark: 0xA7B0BC)
-    static let appBorder = adaptive(light: 0xD9E0E7, dark: 0x29333C)
-    static let appPrimary = adaptive(light: 0x116D6E, dark: 0x4FB5B3)
-    static let appPrimaryForeground = adaptive(light: 0xFFFFFF, dark: 0x061819)
-    static let appAccent = adaptive(light: 0xE7F3F3, dark: 0x183436)
-    static let appAccentForeground = adaptive(light: 0x0E4F51, dark: 0xB7EEEE)
-    static let appDestructive = adaptive(light: 0xB4232F, dark: 0xFF6B73)
-    static let appRing = adaptive(light: 0x158083, dark: 0x6AC7C5)
+    static let appBackground = Color("appBackground", bundle: .module)
+    static let appForeground = Color("appForeground", bundle: .module)
+    static let appCard = Color("appCard", bundle: .module)
+    static let appMuted = Color("appMuted", bundle: .module)
+    static let appMutedForeground = Color("appMutedForeground", bundle: .module)
+    static let appBorder = Color("appBorder", bundle: .module)
+    static let appPrimary = Color("appPrimary", bundle: .module)
+    static let appPrimaryForeground = Color("appPrimaryForeground", bundle: .module)
+    static let appAccent = Color("appAccent", bundle: .module)
+    static let appAccentForeground = Color("appAccentForeground", bundle: .module)
+    static let appDestructive = Color("appDestructive", bundle: .module)
+    static let appRing = Color("appRing", bundle: .module)
     static let appCategoryPalette: [Color] = [0xA78BFA, 0xF0A35E, 0x5EC8C4, 0x6AA8F0, 0x8BD17C].map { Color(hex: $0) }
 
     static func appCategory(id: String?, name: String? = nil) -> Color {
@@ -23,36 +23,10 @@ public extension Color {
         return appCategoryPalette[key.flatMap { named[$0] } ?? Int(hash % UInt32(appCategoryPalette.count))]
     }
 
-    private static func adaptive(light: UInt32, dark: UInt32) -> Color {
-        #if canImport(UIKit)
-        Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: dark) : UIColor(hex: light) })
-        #elseif canImport(AppKit)
-        Color(nsColor: NSColor(name: nil) { $0.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua ? NSColor(hex: dark) : NSColor(hex: light) })
-        #else
-        Color(hex: light)
-        #endif
-    }
-
     init(hex: UInt32) {
         self.init(red: Double(hex >> 16 & 0xFF) / 255, green: Double(hex >> 8 & 0xFF) / 255, blue: Double(hex & 0xFF) / 255)
     }
 }
-
-#if canImport(UIKit)
-private extension UIColor {
-    convenience init(hex: UInt32) {
-        self.init(red: CGFloat(hex >> 16 & 0xFF) / 255, green: CGFloat(hex >> 8 & 0xFF) / 255, blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
-    }
-}
-#endif
-
-#if canImport(AppKit) && !canImport(UIKit)
-private extension NSColor {
-    convenience init(hex: UInt32) {
-        self.init(srgbRed: CGFloat(hex >> 16 & 0xFF) / 255, green: CGFloat(hex >> 8 & 0xFF) / 255, blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
-    }
-}
-#endif
 
 public struct PrimaryButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
