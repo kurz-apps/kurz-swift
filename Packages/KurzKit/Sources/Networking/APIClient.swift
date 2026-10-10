@@ -3,6 +3,7 @@ import Foundation
 public enum APIError: Error, Equatable, Sendable {
     case unauthorized
     case server(status: Int, message: String?)
+    case rateLimited(retryAfter: TimeInterval?)
     case invalidResponse
 }
 
@@ -55,6 +56,7 @@ public struct APIClient: Sendable {
         switch http.statusCode {
         case 200..<300: return (data, http)
         case 401: throw APIError.unauthorized
+        case 429: throw APIError.rateLimited(retryAfter: http.value(forHTTPHeaderField: "Retry-After").flatMap(TimeInterval.init))
         default: throw APIError.server(status: http.statusCode, message: Self.message(in: data))
         }
     }

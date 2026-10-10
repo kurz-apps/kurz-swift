@@ -7,13 +7,16 @@ public struct RootView: View {
     enum Destination: Hashable { case agenda, pending }
 
     let model: AgendaModel
+    let pending: PendingModel
     let userEmail: String
     let signOut: () -> Void
     @Environment(\.horizontalSizeClass) private var sizeClass
+    @Environment(\.scenePhase) private var scenePhase
     @State private var selection: Destination? = .agenda
 
-    public init(model: AgendaModel, userEmail: String, signOut: @escaping () -> Void) {
+    public init(model: AgendaModel, pending: PendingModel, userEmail: String, signOut: @escaping () -> Void) {
         self.model = model
+        self.pending = pending
         self.userEmail = userEmail
         self.signOut = signOut
     }
@@ -25,24 +28,22 @@ public struct RootView: View {
             NavigationSplitView {
                 List(selection: $selection) {
                     Label("Agenda", systemImage: "calendar").tag(Destination.agenda)
-                    Label("Pending approval", systemImage: "clock.badge.questionmark").tag(Destination.pending)
-                        .badge(count)
+                    Label("Pending approval", systemImage: "clock.badge.questionmark").badge(pending.count)
+                        .tag(Destination.pending)
                 }
                 .navigationTitle("Kurz")
                 .safeAreaInset(edge: .bottom) { account }
             } detail: {
                 switch selection ?? .agenda {
                 case .agenda: AgendaView(model: model, userEmail: userEmail, signOut: signOut)
-                case .pending: PendingView(model: model)
+                case .pending: PendingView(model: pending)
                 }
             }
             .tint(Color.appPrimary)
             .task { await model.refresh() }
+            .onChange(of: scenePhase) { if scenePhase == .active { Task { await pending.refresh() } } }
+            .onChange(of: model.phase) { if case .loaded = model.phase { Task { await pending.refresh() } } }
         }
-    }
-
-    private var count: Int {
-        if case .loaded(let agenda) = model.phase { pendingCount(in: agenda) } else { 0 }
     }
 
     private var account: some View {
@@ -58,15 +59,15 @@ public struct RootView: View {
 
 #if DEBUG
 #Preview("Root · iPad", traits: .landscapeLeft) {
-    RootView(model: .preview(), userEmail: "ana@kurz.app") {}.environment(\.horizontalSizeClass, .regular)
+    RootView(model: .preview(), pending: .preview(), userEmail: "ana@kurz.app") {}.environment(\.horizontalSizeClass, .regular)
 }
 
 #Preview("Root · iPad · dark", traits: .landscapeLeft) {
-    RootView(model: .preview(), userEmail: "ana@kurz.app") {}.environment(\.horizontalSizeClass, .regular).preferredColorScheme(.dark)
+    RootView(model: .preview(), pending: .preview(), userEmail: "ana@kurz.app") {}.environment(\.horizontalSizeClass, .regular).preferredColorScheme(.dark)
 }
 
 #Preview("Root · iPhone") {
-    RootView(model: .preview(), userEmail: "ana@kurz.app") {}.environment(\.horizontalSizeClass, .compact)
+    RootView(model: .preview(), pending: .preview(), userEmail: "ana@kurz.app") {}.environment(\.horizontalSizeClass, .compact)
 }
 
 #Preview("Pending approval") {
