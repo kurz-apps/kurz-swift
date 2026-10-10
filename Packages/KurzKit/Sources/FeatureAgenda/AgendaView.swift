@@ -152,13 +152,7 @@ public struct AgendaView: View {
         case .idle, .loading:
             ProgressView()
         case .failed(let message):
-            ContentUnavailableView {
-                Label("Couldn't load your agenda", systemImage: "calendar.badge.exclamationmark")
-            } description: {
-                Text(message)
-            } actions: {
-                Button("Try again") { Task { await model.refresh() } }.buttonStyle(.glassProminent).tint(Color.appPrimary)
-            }
+            LoadFailedView("Couldn't load your agenda", message: message) { Task { await model.refresh() } }
         case .loaded(let agenda):
             let days = model.days
             if days.isEmpty, !model.query.isEmpty {
@@ -430,7 +424,7 @@ struct OverflowChip: View {
         Button { showing = true } label: {
             VStack(alignment: summary ? .leading : .center, spacing: 3) {
                 if summary {
-                    Text(time(sessions[0].startsAt, timeZone.identifier)).font(.caption2.weight(.semibold).monospacedDigit())
+                    Text(sessions[0].startsAt.timeOfDay(in: timeZone.identifier)).font(.caption2.weight(.semibold).monospacedDigit())
                     HStack(spacing: 3) {
                         ForEach(sessions.prefix(4)) { session in
                             Circle().fill(Color.appCategory(id: session.category?.id, name: session.category?.name)).frame(width: 7, height: 7)
@@ -464,7 +458,7 @@ struct OverflowChip: View {
                     } label: {
                         HStack(spacing: 10) {
                             Circle().fill(Color.appCategory(id: session.category?.id, name: session.category?.name)).frame(width: 8, height: 8)
-                            Text(time(session.startsAt, timeZone.identifier)).monospacedDigit().foregroundStyle(Color.appMutedForeground)
+                            Text(session.startsAt.timeOfDay(in: timeZone.identifier)).monospacedDigit().foregroundStyle(Color.appMutedForeground)
                             Text(session.serviceName ?? session.formTitle).foregroundStyle(Color.appForeground)
                             Spacer(minLength: 12)
                             Text(occupancy(session)).font(.caption).foregroundStyle(Color.appMutedForeground)
@@ -496,10 +490,6 @@ func occupancy(_ session: AgendaSession) -> String {
     return pending == 0 ? base : base + " · " + String(localized: "\(pending) pending")
 }
 
-func time(_ date: Date, _ timeZone: String) -> String {
-    date.formatted(Date.FormatStyle(timeZone: TimeZone(identifier: timeZone) ?? .current).hour().minute())
-}
-
 struct SessionBlock: View {
     let session: AgendaSession
     let timeZone: TimeZone
@@ -509,10 +499,10 @@ struct SessionBlock: View {
         let color = Color.appCategory(id: session.category?.id, name: session.category?.name)
         let shape = RoundedRectangle(cornerRadius: 6)
         let title = session.serviceName ?? session.formTitle
-        let details = time(session.startsAt, timeZone.identifier) + " · " + occupancy(session)
+        let details = session.startsAt.timeOfDay(in: timeZone.identifier) + " · " + occupancy(session)
         VStack(alignment: .leading, spacing: 1) {
             if compact {
-                Text(time(session.startsAt, timeZone.identifier)).font(.caption2.weight(.semibold).monospacedDigit())
+                Text(session.startsAt.timeOfDay(in: timeZone.identifier)).font(.caption2.weight(.semibold).monospacedDigit())
                 HStack(spacing: 2) {
                     Image(systemName: "person.fill").imageScale(.small)
                     Text(session.appointments.count, format: .number)
@@ -541,21 +531,6 @@ struct SessionBlock: View {
     }
 }
 
-struct DayHeader: View {
-    let date: String
-
-    var body: some View {
-        let parsed = try? Date(date, strategy: .iso8601.year().month().day())
-        let label: String = parsed.map { day in
-            let calendar = Calendar.current
-            let relative = calendar.isDateInToday(day) ? String(localized: "Today") : calendar.isDateInTomorrow(day) ? String(localized: "Tomorrow") : nil
-            return [relative ?? day.formatted(.dateTime.weekday(.wide)).capitalized, day.formatted(.dateTime.day().month(.wide))].joined(separator: " · ")
-        } ?? date
-        Text(label).font(.subheadline.weight(.semibold)).foregroundStyle(Color.appPrimary).textCase(nil)
-            .accessibilityAddTraits(.isHeader)
-    }
-}
-
 struct SessionRow: View {
     let session: AgendaSession
     let timeZone: String
@@ -563,8 +538,8 @@ struct SessionRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .trailing, spacing: 2) {
-                Text(time(session.startsAt, timeZone))
-                if let end = session.endsAt { Text(time(end, timeZone)).foregroundStyle(Color.appMutedForeground) }
+                Text(session.startsAt.timeOfDay(in: timeZone))
+                if let end = session.endsAt { Text(end.timeOfDay(in: timeZone)).foregroundStyle(Color.appMutedForeground) }
             }
             .font(.subheadline.monospacedDigit())
             .frame(width: 52, alignment: .trailing)
@@ -645,30 +620,10 @@ struct SessionDetail: View {
 
     private var when: String {
         let day = session.startsAt.formatted(Date.FormatStyle(timeZone: TimeZone(identifier: timeZone) ?? .current).weekday(.wide).day().month(.wide))
-        return [day, [session.startsAt, session.endsAt].compactMap { $0.map { time($0, timeZone) } }.joined(separator: "–")].joined(separator: " · ")
+        return [day, [session.startsAt, session.endsAt].compactMap { $0.map { $0.timeOfDay(in: timeZone) } }.joined(separator: "–")].joined(separator: " · ")
     }
 
     private func initials(_ name: String?) -> String {
         (name ?? "?").split(separator: " ").prefix(2).compactMap(\.first).map(String.init).joined().uppercased()
-    }
-}
-
-struct StatusBadge: View {
-    let status: String
-
-    var body: some View {
-        Text(label).font(.caption2.weight(.semibold))
-            .padding(.horizontal, 8).padding(.vertical, 3)
-            .foregroundStyle(status == "pending" ? Color.appPendingForeground : Color.appPrimaryForeground)
-            .background(status == "pending" ? Color.appPending : Color.appPrimary, in: Capsule())
-    }
-
-    private var label: LocalizedStringKey {
-        switch status {
-        case "confirmed": "Confirmed"
-        case "pending": "Pending"
-        case "unverified": "Unverified"
-        default: LocalizedStringKey(status.capitalized)
-        }
     }
 }
