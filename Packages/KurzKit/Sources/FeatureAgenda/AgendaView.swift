@@ -41,11 +41,8 @@ public struct AgendaView: View {
     }
 
     private var subtitle: String {
-        let dates = model.dates
-        let label = model.period == .day
-            ? dates[0].formatted(.dateTime.weekday(.wide).day().month(.wide))
-            : (dates[0]..<dates[dates.count - 1]).formatted(.interval.day().month(.wide).year())
-        guard case .loaded = model.phase else { return label }
+        let label = model.periodLabel
+        guard case .loaded = model.phase, !model.isStale else { return label }
         let count = model.days.reduce(0) { $0 + $1.sessions.count }
         return label + " · " + String(localized: "\(count) sessions")
     }
@@ -57,6 +54,7 @@ public struct AgendaView: View {
                     DatePicker("Go to date", selection: Binding { model.anchor } set: { model.show($0); choosingDate = false }, displayedComponents: .date)
                         .datePickerStyle(.graphical)
                         .tint(Color.appPrimary)
+                        .environment(\.timeZone, model.calendar.timeZone)
                         .frame(minWidth: 320)
                         .padding()
                         .presentationCompactAdaptation(.popover)
@@ -74,7 +72,7 @@ public struct AgendaView: View {
     }
 
     private var filterMenu: some View {
-        let filtering = model.onlyPending || !model.hiddenForms.isEmpty || !model.hiddenCategories.isEmpty
+        let filtering = model.isFiltering
         return Menu("Filters", systemImage: filtering ? "line.3.horizontal.decrease.circle.fill" : "line.3.horizontal.decrease.circle") {
             Toggle("Only pending", systemImage: "clock", isOn: $model.onlyPending)
             if !model.forms.isEmpty {
@@ -102,11 +100,7 @@ public struct AgendaView: View {
                 }
             }
             if filtering {
-                Button("Show all", systemImage: "arrow.uturn.backward") {
-                    model.onlyPending = false
-                    model.hiddenForms = []
-                    model.hiddenCategories = []
-                }
+                Button("Show all", systemImage: "arrow.uturn.backward", action: model.clearFilters)
             }
         }
         .menuIndicator(.hidden)
@@ -126,6 +120,9 @@ public struct AgendaView: View {
                 .pickerStyle(.segmented)
                 .labelsHidden()
                 .fixedSize()
+                if model.isRefreshing {
+                    ProgressView().controlSize(.small).accessibilityLabel("Updating")
+                }
                 Spacer()
                 GlassEffectContainer {
                     HStack(spacing: 6) {
@@ -142,13 +139,44 @@ public struct AgendaView: View {
                     .tint(Color.appPrimary)
                 }
             }
-            if compact, model.period == .week, case .loaded = model.phase {
+            if listLayout, model.period == .week, case .loaded = model.phase {
                 WeekStrip(model: model, focusedDay: $focusedDay)
+            }
+            status
+            if let error = model.refreshError {
+                RefreshBanner(message: error) { Task { await model.refresh() } } dismiss: { model.refreshError = nil }
+                    .transition(.opacity)
             }
         }
         .padding(.horizontal)
         .padding(.vertical, 8)
+        .animation(.default, value: model.refreshError)
     }
+
+    @ViewBuilder private var status: some View {
+        let note = model.timeZoneNote()
+        if model.isFiltering || note != nil {
+            HStack(spacing: 8) {
+                if model.isFiltering {
+                    let hidden = model.hiddenByFilters
+                    Label(hidden == 0 ? "Filters on" : "Filters on · \(hidden) hidden", systemImage: "line.3.horizontal.decrease.circle.fill")
+                        .foregroundStyle(Color.appForeground)
+                    Button("Clear", action: model.clearFilters)
+                        .fontWeight(.semibold)
+                        .buttonStyle(.borderless)
+                        .accessibilityLabel("Clear filters")
+                }
+                Spacer(minLength: 0)
+                if let note {
+                    Label(note, systemImage: "globe").foregroundStyle(Color.appMutedForeground)
+                }
+            }
+            .font(.footnote)
+            .lineLimit(1)
+        }
+    }
+
+    private var listLayout: Bool { compact && model.period == .week }
 
     @ViewBuilder private var content: some View {
         switch model.phase {
@@ -158,19 +186,56 @@ public struct AgendaView: View {
             LoadFailedView("Couldn't load your agenda", message: message) { Task { await model.refresh() } }
         case .loaded(let agenda):
             let days = model.days
-            if days.isEmpty, !model.query.isEmpty {
-                ContentUnavailableView.search(text: model.query)
-            } else if days.isEmpty {
+            if model.isStale, listLayout, days.isEmpty {
+                ProgressView()
+            } else if !model.isStale, days.isEmpty, !model.query.isEmpty {
+                noResults
+            } else if !model.isStale, days.isEmpty {
                 ContentUnavailableView("No sessions", systemImage: "calendar", description: Text(model.period == .day ? "Nothing scheduled for this day." : "Nothing scheduled for this week."))
                     .accessibilityIdentifier("agenda-empty")
-            } else if compact, model.period == .week {
-                WeekList(days: days, timeZone: agenda.timeZone, focusedDay: $focusedDay) { selected = $0 }
+            } else if listLayout {
+                WeekList(model: model, days: days, timeZone: agenda.timeZone, focusedDay: $focusedDay) { selected = $0 }
+                    .opacity(model.isStale ? 0.45 : 1)
                     .accessibilityIdentifier("agenda-list")
             } else {
                 TimeGrid(model: model, days: days, timeZone: TimeZone(identifier: agenda.timeZone) ?? .current) { selected = $0 }
                     .accessibilityIdentifier("agenda-list")
             }
         }
+    }
+
+    private var noResults: some View {
+        ContentUnavailableView {
+            Label("No results for “\(model.query)”", systemImage: "magnifyingglass")
+        } description: {
+            Text("Search only looks at \(model.periodLabel). Go to another date to search there.")
+        } actions: {
+            if model.hiddenByFilters > 0 {
+                Button("Show hidden matches", action: model.clearFilters)
+            }
+        }
+    }
+}
+
+struct RefreshBanner: View {
+    let message: String
+    let retry: () -> Void
+    let dismiss: () -> Void
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "exclamationmark.triangle.fill").foregroundStyle(Color.appDestructive).accessibilityHidden(true)
+            Text(message).foregroundStyle(Color.appForeground)
+            Spacer(minLength: 0)
+            Button("Try again", action: retry).fontWeight(.semibold).buttonStyle(.borderless)
+            Button("Dismiss", systemImage: "xmark", action: dismiss).labelStyle(.iconOnly).buttonStyle(.borderless).foregroundStyle(Color.appMutedForeground)
+        }
+        .font(.footnote)
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(Color.appCard, in: RoundedRectangle(cornerRadius: 10))
+        .overlay { RoundedRectangle(cornerRadius: 10).strokeBorder(Color.appBorder) }
+        .onAppear { AccessibilityNotification.Announcement(message).post() }
     }
 }
 
@@ -187,8 +252,8 @@ struct WeekStrip: View {
                     focusedDay = key
                 } label: {
                     VStack(spacing: 4) {
-                        Text(date.formatted(.dateTime.weekday(.narrow))).font(.caption2).foregroundStyle(Color.appMutedForeground)
-                        DayNumber(date: date, today: model.calendar.isDateInToday(date))
+                        Text(date.formatted(model.dateStyle.weekday(.narrow))).font(.caption2).foregroundStyle(Color.appMutedForeground)
+                        DayNumber(text: date.formatted(model.dateStyle.day()), today: model.isToday(date))
                         Circle().fill(booked.contains(key) ? Color.appPrimary : .clear).frame(width: 5, height: 5)
                     }
                     .frame(maxWidth: .infinity)
@@ -196,18 +261,18 @@ struct WeekStrip: View {
                 }
                 .buttonStyle(.plain)
                 .disabled(!booked.contains(key))
-                .accessibilityLabel(date.formatted(date: .complete, time: .omitted))
+                .accessibilityLabel(date.formatted(model.dateStyle.weekday(.wide).day().month(.wide).year()))
             }
         }
     }
 }
 
 struct DayNumber: View {
-    let date: Date
+    let text: String
     let today: Bool
 
     var body: some View {
-        Text(date.formatted(.dateTime.day()))
+        Text(text)
             .font(.subheadline.weight(today ? .bold : .regular).monospacedDigit())
             .foregroundStyle(today ? Color.white : Color.appForeground)
             .frame(width: 30, height: 30)
@@ -216,6 +281,7 @@ struct DayNumber: View {
 }
 
 struct WeekList: View {
+    let model: AgendaModel
     let days: [AgendaDay]
     let timeZone: String
     @Binding var focusedDay: String?
@@ -233,7 +299,11 @@ struct WeekList: View {
                                 .accessibilityAction { select(session) }
                         }
                     } header: {
-                        DayHeader(date: day.date)
+                        Text(model.dayTitle(day.date))
+                            .font(.subheadline.weight(.semibold))
+                            .foregroundStyle(Color.appPrimary)
+                            .textCase(nil)
+                            .accessibilityAddTraits(.isHeader)
                     }
                     .id(day.date)
                 }
@@ -270,8 +340,8 @@ struct TimeGrid: View {
                             model.show(date, period: .day)
                         } label: {
                             VStack(spacing: 2) {
-                                Text(date.formatted(.dateTime.weekday(.abbreviated))).font(.caption).foregroundStyle(Color.appMutedForeground)
-                                DayNumber(date: date, today: model.calendar.isDateInToday(date))
+                                Text(date.formatted(model.dateStyle.weekday(.abbreviated))).font(.caption).foregroundStyle(Color.appMutedForeground)
+                                DayNumber(text: date.formatted(model.dateStyle.day()), today: model.isToday(date))
                             }
                             .frame(maxWidth: .infinity)
                         }
@@ -309,9 +379,9 @@ struct TimeGrid: View {
                     }
                     .padding(.vertical, 8)
                 }
-                .onChange(of: model.dates, initial: true) {
-                    let earliest = days.flatMap(\.sessions).map { minutes($0.startsAt) }.min()
-                    let showsToday = model.dates.contains { model.calendar.isDateInToday($0) }
+                .onChange(of: model.range.from + model.range.to + String(model.isStale), initial: true) {
+                    let earliest = model.isStale ? nil : days.flatMap(\.sessions).map { minutes($0.startsAt) }.min()
+                    let showsToday = model.dates.contains { model.isToday($0) }
                     proxy.scrollTo(Self.initialHour(earliest: earliest, now: showsToday ? minutes(.now) : nil), anchor: .top)
                 }
             }
@@ -339,14 +409,23 @@ struct TimeGrid: View {
                     .frame(width: overflowWidth - 3, height: height(overflow.start, overflow.end))
                     .offset(x: width - overflowWidth + 1.5, y: top(overflow.start))
             }
-            if model.calendar.isDateInToday(date) {
-                Rectangle().fill(Color.appDestructive).frame(height: 1.5)
-                    .overlay(alignment: .leading) { Circle().fill(Color.appDestructive).frame(width: 8, height: 8).offset(x: -4) }
-                    .offset(y: minutes(.now) / 60 * hourHeight)
-                    .accessibilityHidden(true)
+            TimelineView(.everyMinute) { context in
+                if model.isToday(date, now: context.date) {
+                    Rectangle().fill(Color.appDestructive).frame(height: 1.5)
+                        .overlay(alignment: .leading) { Circle().fill(Color.appDestructive).frame(width: 8, height: 8).offset(x: -4) }
+                        .offset(y: minutes(context.date) / 60 * hourHeight)
+                        .accessibilityHidden(true)
+                }
             }
         }
         .frame(height: 24 * hourHeight)
+        .background {
+            TimelineView(.everyMinute) { context in
+                if model.dates.count > 1, model.isToday(date, now: context.date) {
+                    Color.appPrimary.opacity(0.05)
+                }
+            }
+        }
         .overlay(alignment: .leading) { Rectangle().fill(Color.appBorder).frame(width: 0.5) }
     }
 

@@ -30,7 +30,9 @@ public final class AgendaModel {
     public enum Phase: Equatable { case idle, loading, loaded(AgendaResponse), failed(String) }
     public enum Period: String, CaseIterable, Sendable { case day, week }
 
-    public private(set) var phase = Phase.idle
+    public internal(set) var phase = Phase.idle
+    public internal(set) var isRefreshing = false
+    public var refreshError: String?
     public var period = Period.week
     public var rollingWeek = false
     public private(set) var anchor: Date
@@ -38,8 +40,8 @@ public final class AgendaModel {
     public var hiddenForms: Set<String> = []
     public var hiddenCategories: Set<String> = []
     public var onlyPending = false
-    public let calendar: Calendar
-    private var loadedRange: String?
+    public private(set) var calendar: Calendar
+    var loadedKeys: Set<String> = []
     private let load: @Sendable (_ from: String, _ to: String) async throws -> AgendaResponse
 
     public convenience init(api: APIClient) {
@@ -68,6 +70,39 @@ public final class AgendaModel {
         date.formatted(Date.ISO8601FormatStyle(timeZone: calendar.timeZone).year().month().day())
     }
 
+    public var isStale: Bool {
+        guard case .loaded = phase else { return false }
+        return !Set(dates.map(key)).isSubset(of: loadedKeys)
+    }
+
+    public func isToday(_ date: Date, now: Date = .now) -> Bool {
+        calendar.isDate(date, inSameDayAs: now)
+    }
+
+    public var dateStyle: Date.FormatStyle { Date.FormatStyle(timeZone: calendar.timeZone) }
+
+    public var periodLabel: String {
+        let dates = dates
+        return period == .day
+            ? dates[0].formatted(dateStyle.weekday(.wide).day().month(.wide))
+            : (dates[0]..<dates[dates.count - 1]).formatted(Date.IntervalFormatStyle(timeZone: calendar.timeZone).day().month(.wide).year())
+    }
+
+    public func dayTitle(_ key: String, now: Date = .now) -> String {
+        guard let day = try? Date.ISO8601FormatStyle(timeZone: calendar.timeZone).year().month().day().parse(key) else { return key }
+        let offset = calendar.dateComponents([.day], from: calendar.startOfDay(for: now), to: day).day
+        let relative = offset == 0 ? String(localized: "Today") : offset == 1 ? String(localized: "Tomorrow") : nil
+        let weekday = relative ?? day.formatted(dateStyle.weekday(.wide)).capitalized
+        return [weekday, day.formatted(dateStyle.day().month(.wide))].joined(separator: " · ")
+    }
+
+    public func timeZoneNote(device: TimeZone = .current) -> String? {
+        guard case .loaded = phase, calendar.timeZone.identifier != device.identifier else { return nil }
+        let zone = calendar.timeZone
+        let name = zone.identifier.contains("/") ? Date.now.formatted(dateStyle.timeZone(.genericLocation)) : zone.identifier
+        return String(localized: "Times in \(name)")
+    }
+
     public func next() { move(1) }
     public func previous() { move(-1) }
     public func goToToday(_ now: Date = .now) { anchor = calendar.startOfDay(for: now) }
@@ -83,8 +118,20 @@ public final class AgendaModel {
 
     private var sessionsInRange: [AgendaSession] {
         guard case .loaded(let response) = phase else { return [] }
-        let keys = Set(dates.map(key))
+        let keys = isStale ? loadedKeys : Set(dates.map(key))
         return response.sessions.filter { keys.contains($0.date) }
+    }
+
+    public var isFiltering: Bool { onlyPending || !hiddenForms.isEmpty || !hiddenCategories.isEmpty }
+
+    public func clearFilters() {
+        onlyPending = false
+        hiddenForms = []
+        hiddenCategories = []
+    }
+
+    public var hiddenByFilters: Int {
+        sessionsInRange.filter { $0.matches(query) }.count - days.reduce(0) { $0 + $1.sessions.count }
     }
 
     public var forms: [AgendaFilterOption] {
@@ -102,28 +149,47 @@ public final class AgendaModel {
 
     public var days: [AgendaDay] {
         let visible = sessionsInRange.filter { session in
-            !hiddenForms.contains(String(session.formId))
-                && !(session.category.map { hiddenCategories.contains($0.id) } ?? false)
-                && (!onlyPending || session.pendingCount > 0)
-                && session.matches(query)
+            passesFilters(session) && session.matches(query)
         }
         return Dictionary(grouping: visible, by: \.date)
             .map { AgendaDay(date: $0.key, sessions: $0.value.sorted { $0.startsAt < $1.startsAt }) }
             .sorted { $0.date < $1.date }
     }
 
+    private func passesFilters(_ session: AgendaSession) -> Bool {
+        !hiddenForms.contains(String(session.formId))
+            && !(session.category.map { hiddenCategories.contains($0.id) } ?? false)
+            && (!onlyPending || session.pendingCount > 0)
+    }
+
     public func refresh() async {
         let range = range
-        let rangeKey = range.from + range.to
-        if case .loaded = phase, loadedRange == rangeKey {} else { phase = .loading }
+        let keys = Set(dates.map(key))
+        refreshError = nil
+        if case .loaded = phase { isRefreshing = true } else { phase = .loading }
         do {
             let response = try await load(range.from, range.to)
-            guard !Task.isCancelled, rangeKey == self.range.from + self.range.to else { return }
+            guard range == self.range else { return }
+            isRefreshing = false
+            adopt(response.timeZone)
             phase = .loaded(response)
-            loadedRange = rangeKey
+            loadedKeys = keys
         } catch {
-            guard !Task.isCancelled, rangeKey == self.range.from + self.range.to else { return }
-            phase = .failed(String(localized: "Couldn't load your agenda. Check your connection and try again."))
+            guard range == self.range else { return }
+            isRefreshing = false
+            guard !Task.isCancelled, !(error is CancellationError) else { return }
+            if case .loaded = phase {
+                refreshError = String(localized: "Couldn't refresh the agenda.")
+            } else {
+                phase = .failed(String(localized: "Couldn't load your agenda. Check your connection and try again."))
+            }
         }
+    }
+
+    private func adopt(_ identifier: String) {
+        guard let zone = TimeZone(identifier: identifier), zone.identifier != calendar.timeZone.identifier else { return }
+        let day = calendar.dateComponents([.year, .month, .day], from: anchor)
+        calendar.timeZone = zone
+        anchor = calendar.date(from: day) ?? anchor
     }
 }

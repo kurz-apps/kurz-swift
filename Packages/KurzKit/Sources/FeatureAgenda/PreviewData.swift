@@ -3,20 +3,28 @@ import Domain
 import Foundation
 
 public extension AgendaModel {
-    enum PreviewState: Sendable { case sample, empty, failing, loading }
+    enum PreviewState: Sendable { case sample, empty, failing, loading, refreshing, refreshFailing, otherTimeZone }
 
     static func preview(_ state: PreviewState = .sample, period: Period = .week) -> AgendaModel {
         let model = AgendaModel { _, _ in
             switch state {
             case .sample: return AgendaResponse.preview
             case .empty: return AgendaResponse(timeZone: TimeZone.current.identifier, sessions: [])
-            case .failing: throw URLError(.notConnectedToInternet)
-            case .loading:
+            case .failing, .refreshFailing: throw URLError(.notConnectedToInternet)
+            case .otherTimeZone:
+                var response = AgendaResponse.preview
+                response.timeZone = TimeZone.current.identifier == "Atlantic/Azores" ? "Europe/Lisbon" : "Atlantic/Azores"
+                return response
+            case .loading, .refreshing:
                 try await Task.sleep(for: .seconds(3600))
                 return AgendaResponse.preview
             }
         }
         model.period = period
+        if state == .refreshing || state == .refreshFailing {
+            model.phase = .loaded(.preview)
+            model.loadedKeys = Set(AgendaResponse.preview.sessions.map(\.date))
+        }
         return model
     }
 }
