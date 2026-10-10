@@ -38,6 +38,7 @@ final class LoginE2ETests: XCTestCase {
         email.tap()
         email.typeText(Self.email)
         let password = app.secureTextFields["password-field"]
+        XCTAssertTrue(password.waitForExistence(timeout: 5))
         password.tap()
         password.typeText("e2e-Password-123")
         app.buttons["login-button"].tap()
@@ -51,6 +52,7 @@ final class LoginE2ETests: XCTestCase {
         email.tap()
         email.typeText(Self.email)
         let password = app.secureTextFields["password-field"]
+        XCTAssertTrue(password.waitForExistence(timeout: 5))
         password.tap()
         password.typeText("wrong-password")
         app.buttons["login-button"].tap()
