@@ -11,6 +11,8 @@
 		000000000000000000000B02 /* FeatureAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 000000000000000000000A12 /* FeatureAuth */; };
 		000000000000000000000B03 /* Networking in Frameworks */ = {isa = PBXBuildFile; productRef = 000000000000000000000A13 /* Networking */; };
 		000000000000000000000B04 /* Domain in Frameworks */ = {isa = PBXBuildFile; productRef = 000000000000000000000A14 /* Domain */; };
+		000000000000000000000B05 /* FeatureAgenda in Frameworks */ = {isa = PBXBuildFile; productRef = 000000000000000000000A15 /* FeatureAgenda */; };
+		000000000000000000000B06 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 000000000000000000000A16 /* DesignSystem */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 				000000000000000000000B02 /* FeatureAuth in Frameworks */,
 				000000000000000000000B03 /* Networking in Frameworks */,
 				000000000000000000000B04 /* Domain in Frameworks */,
+				000000000000000000000B05 /* FeatureAgenda in Frameworks */,
+				000000000000000000000B06 /* DesignSystem in Frameworks */,
 			);
 		};
 		000000000000000230000000 /* Frameworks */ = {
@@ -99,6 +103,8 @@
 				000000000000000000000A12 /* FeatureAuth */,
 				000000000000000000000A13 /* Networking */,
 				000000000000000000000A14 /* Domain */,
+				000000000000000000000A15 /* FeatureAgenda */,
+				000000000000000000000A16 /* DesignSystem */,
 			);
 			productName = Kurz;
 			productReference = 000000000000000000000120 /* Kurz.app */;
@@ -498,6 +504,14 @@
 		000000000000000000000A14 /* Domain */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Domain;
+		};
+		000000000000000000000A15 /* FeatureAgenda */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FeatureAgenda;
+		};
+		000000000000000000000A16 /* DesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DesignSystem;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

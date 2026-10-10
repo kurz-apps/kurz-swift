@@ -10,6 +10,7 @@ let package = Package(
         .library(name: "DesignSystem", targets: ["DesignSystem"]),
         .library(name: "Auth", targets: ["Auth"]),
         .library(name: "FeatureAuth", targets: ["FeatureAuth"]),
+        .library(name: "FeatureAgenda", targets: ["FeatureAgenda"]),
     ],
     targets: [
         .target(name: "Domain"),
@@ -17,6 +18,8 @@ let package = Package(
         .target(name: "Auth", dependencies: ["Domain", "Networking"]),
         .target(name: "DesignSystem"),
         .target(name: "FeatureAuth", dependencies: ["Auth", "DesignSystem"]),
+        .target(name: "FeatureAgenda", dependencies: ["Domain", "Networking", "DesignSystem"]),
+        .testTarget(name: "FeatureAgendaTests", dependencies: ["FeatureAgenda", "Domain"]),
         .testTarget(name: "AuthTests", dependencies: ["Auth", "Networking", "Domain"]),
         .testTarget(name: "DomainTests", dependencies: ["Domain"]),
         .testTarget(name: "NetworkingTests", dependencies: ["Networking", "Domain"]),
