@@ -18,6 +18,7 @@ import SwiftUI
         }
         #if os(macOS)
         .windowToolbarStyle(.unified(showsTitle: false))
+        .defaultSize(width: 590, height: 610)
         #endif
     }
 }
