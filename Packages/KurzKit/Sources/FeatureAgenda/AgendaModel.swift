@@ -41,6 +41,7 @@ public final class AgendaModel {
     public var hiddenCategories: Set<String> = []
     public var onlyPending = false
     public var selection: AgendaSession.ID?
+    public var isChoosingDate = false
     public private(set) var calendar: Calendar
     var loadedKeys: Set<String> = []
     private let load: @Sendable (_ from: String, _ to: String) async throws -> AgendaResponse

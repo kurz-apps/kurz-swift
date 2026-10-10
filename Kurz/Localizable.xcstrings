@@ -1459,6 +1459,28 @@
           }
         }
       }
+    },
+    "Calendar": {
+      "extractionState": "manual",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Calendário"
+          }
+        }
+      }
+    },
+    "Go to Date…": {
+      "extractionState": "manual",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ir para data…"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

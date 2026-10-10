@@ -8,7 +8,6 @@ public struct AgendaView: View {
     let signOut: () -> Void
     @Environment(\.horizontalSizeClass) private var sizeClass
     @Environment(\.dynamicTypeSize) private var typeSize
-    @State private var choosingDate = false
     @State private var focusedDay: String?
 
     public init(model: AgendaModel, userEmail: String, signOut: @escaping () -> Void) {
@@ -36,6 +35,7 @@ public struct AgendaView: View {
                     }
                 }
         }
+        .focusedSceneValue(model)
         .onChange(of: compact, initial: true) { model.rollingWeek = compact }
         .task(id: model.range.from + model.range.to) { await model.refresh() }
     }
@@ -49,25 +49,18 @@ public struct AgendaView: View {
 
     @ToolbarContentBuilder private var toolbar: some ToolbarContent {
         ToolbarItemGroup(placement: .primaryAction) {
-            Button("Go to date", systemImage: "calendar") { choosingDate = true }
-                .popover(isPresented: $choosingDate) {
-                    DatePicker("Go to date", selection: Binding { model.anchor } set: { model.show($0); choosingDate = false }, displayedComponents: .date)
-                        .datePickerStyle(.graphical)
-                        .tint(Color.appPrimary)
-                        .environment(\.timeZone, model.calendar.timeZone)
-                        .frame(minWidth: 320)
-                        .padding()
-                        .presentationCompactAdaptation(.popover)
-                }
+            Button("Go to date", systemImage: "calendar") { model.isChoosingDate = true }
             filterMenu
-            Menu("Account", systemImage: "person.crop.circle") {
-                Text(userEmail)
-                Button("Refresh", systemImage: "arrow.clockwise") { Task { await model.refresh() } }.keyboardShortcut("r")
-                Button("Sign out", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive, action: signOut)
-                    .accessibilityIdentifier("sign-out-button")
+            if compact {
+                Menu("Account", systemImage: "person.crop.circle") {
+                    Text(userEmail)
+                    Button("Refresh", systemImage: "arrow.clockwise") { Task { await model.refresh() } }
+                    Button("Sign out", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive, action: signOut)
+                        .accessibilityIdentifier("sign-out-button")
+                }
+                .menuIndicator(.hidden)
+                .accessibilityIdentifier("account-menu")
             }
-            .menuIndicator(.hidden)
-            .accessibilityIdentifier("account-menu")
         }
     }
 
@@ -128,15 +121,21 @@ public struct AgendaView: View {
                     HStack(spacing: 6) {
                         Button("Previous", systemImage: "chevron.left", action: model.previous)
                             .labelStyle(.iconOnly)
-                            .keyboardShortcut(.leftArrow)
                         Button("Today") { model.goToToday() }
-                            .keyboardShortcut("t")
                         Button("Next", systemImage: "chevron.right", action: model.next)
                             .labelStyle(.iconOnly)
-                            .keyboardShortcut(.rightArrow)
                     }
                     .buttonStyle(.glass)
                     .tint(Color.appPrimary)
+                }
+                .popover(isPresented: $model.isChoosingDate, arrowEdge: .top) {
+                    DatePicker("Go to date", selection: Binding { model.anchor } set: { model.show($0); model.isChoosingDate = false }, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .tint(Color.appPrimary)
+                        .environment(\.timeZone, model.calendar.timeZone)
+                        .frame(minWidth: 320)
+                        .padding()
+                        .presentationCompactAdaptation(.popover)
                 }
             }
             if listLayout, model.period == .week, case .loaded = model.phase {

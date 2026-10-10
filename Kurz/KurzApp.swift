@@ -1,4 +1,6 @@
 import Auth
+import Domain
+import FeatureAgenda
 import Networking
 import SwiftUI
 
@@ -12,9 +14,24 @@ import SwiftUI
         _session = State(initialValue: SessionStore(auth: AuthService(configuration: configuration, store: store)))
     }
 
+    private var isSignedIn: Bool {
+        if case .signedIn = session.state { true } else { false }
+    }
+
     var body: some Scene {
         WindowGroup {
             ContentView(session: session)
+        }
+        .commands {
+            SidebarCommands()
+            AgendaCommands()
+            CommandMenu("Account") {
+                if case .signedIn(let user) = session.state {
+                    Text(user.email)
+                }
+                Button("Sign out") { Task { await session.signOut() } }
+                    .disabled(!isSignedIn)
+            }
         }
         #if os(macOS)
         .windowToolbarStyle(.unified(showsTitle: false))
