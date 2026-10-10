@@ -96,7 +96,7 @@ public struct LoginView: View {
             .buttonStyle(PrimaryButtonStyle()).disabled(isLoading || !emailReady || password.isEmpty)
             .accessibilityIdentifier("login-button")
         Button { requestCode() } label: { Label("E-mail me a code", systemImage: "envelope").fontWeight(.medium) }
-            .font(.subheadline).foregroundStyle(Color.appPrimary).disabled(isLoading)
+            .buttonStyle(.plain).font(.subheadline).foregroundStyle(Color.appPrimary).opacity(isLoading ? 0.45 : 1).disabled(isLoading)
             .accessibilityIdentifier("send-code-button")
     }
 
@@ -111,9 +111,9 @@ public struct LoginView: View {
             .buttonStyle(PrimaryButtonStyle()).disabled(isLoading || code.count < Self.codeLength)
             .accessibilityIdentifier("verify-button")
         Button("Resend code") { Task { await sendCode() } }
-            .font(.subheadline).foregroundStyle(Color.appPrimary).disabled(isLoading)
+            .buttonStyle(.plain).font(.subheadline).foregroundStyle(Color.appPrimary).opacity(isLoading ? 0.45 : 1).disabled(isLoading)
         Button("Use another e-mail") { codeSent = false; code = ""; error = nil }
-            .font(.subheadline).foregroundStyle(Color.appPrimary)
+            .buttonStyle(.plain).font(.subheadline).foregroundStyle(Color.appPrimary)
     }
 
     private var emailReady: Bool { normalizedEmail.wholeMatch(of: /[^\s@]+@[^\s@]+\.[^\s@]+/) != nil }
@@ -127,6 +127,7 @@ public struct LoginView: View {
         VStack(alignment: .leading, spacing: 6) {
             HStack { Text(title).font(.subheadline.weight(.medium)).foregroundStyle(Color.appForeground); Spacer(minLength: 8); trailing() }
             content()
+                .textFieldStyle(.plain).foregroundStyle(Color.appForeground).tint(Color.appPrimary)
                 .padding(12).background(Color.appBackground, in: RoundedRectangle(cornerRadius: 10))
                 .overlay(RoundedRectangle(cornerRadius: 10).stroke(focus == focusOn ? Color.appRing : Color.appBorder, lineWidth: 1))
                 .background { if focus == focusOn { RoundedRectangle(cornerRadius: 10).stroke(Color.appRing.opacity(0.3), lineWidth: 6) } }
