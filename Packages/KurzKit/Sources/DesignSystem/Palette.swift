@@ -13,6 +13,15 @@ public extension Color {
     static let appAccentForeground = adaptive(light: 0x0E4F51, dark: 0xB7EEEE)
     static let appDestructive = adaptive(light: 0xB4232F, dark: 0xFF6B73)
     static let appRing = adaptive(light: 0x158083, dark: 0x6AC7C5)
+    static let appCategoryPalette: [Color] = [0xA78BFA, 0xF0A35E, 0x5EC8C4, 0x6AA8F0, 0x8BD17C].map { Color(hex: $0) }
+
+    static func appCategory(id: String?, name: String? = nil) -> Color {
+        guard let id else { return .appPrimary }
+        let named = ["spa": 0, "unhas": 1, "danca": 2, "musica": 3, "outros": 4]
+        let key = name?.folding(options: [.caseInsensitive, .diacriticInsensitive], locale: nil).trimmingCharacters(in: .whitespaces)
+        let hash = id.utf8.reduce(UInt32(2_166_136_261)) { ($0 ^ UInt32($1)) &* 16_777_619 }
+        return appCategoryPalette[key.flatMap { named[$0] } ?? Int(hash % UInt32(appCategoryPalette.count))]
+    }
 
     private static func adaptive(light: UInt32, dark: UInt32) -> Color {
         #if canImport(UIKit)

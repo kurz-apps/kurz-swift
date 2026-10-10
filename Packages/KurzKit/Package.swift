@@ -19,7 +19,7 @@ let package = Package(
         .target(name: "DesignSystem"),
         .target(name: "FeatureAuth", dependencies: ["Auth", "DesignSystem"]),
         .target(name: "FeatureAgenda", dependencies: ["Domain", "Networking", "DesignSystem"]),
-        .testTarget(name: "FeatureAgendaTests", dependencies: ["FeatureAgenda", "Domain"]),
+        .testTarget(name: "FeatureAgendaTests", dependencies: ["FeatureAgenda", "Domain", "DesignSystem"]),
         .testTarget(name: "AuthTests", dependencies: ["Auth", "Networking", "Domain"]),
         .testTarget(name: "DomainTests", dependencies: ["Domain"]),
         .testTarget(name: "NetworkingTests", dependencies: ["Networking", "Domain"]),
