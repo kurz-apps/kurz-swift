@@ -68,6 +68,7 @@ public struct AgendaView: View {
                 Button("Sign out", systemImage: "rectangle.portrait.and.arrow.right", role: .destructive, action: signOut)
                     .accessibilityIdentifier("sign-out-button")
             }
+            .menuIndicator(.hidden)
             .accessibilityIdentifier("account-menu")
         }
     }
@@ -108,6 +109,7 @@ public struct AgendaView: View {
                 }
             }
         }
+        .menuIndicator(.hidden)
     }
 
     private func visible(_ id: String, in set: ReferenceWritableKeyPath<AgendaModel, Set<String>>) -> Binding<Bool> {
@@ -122,6 +124,7 @@ public struct AgendaView: View {
                     Text("Week").tag(AgendaModel.Period.week)
                 }
                 .pickerStyle(.segmented)
+                .labelsHidden()
                 .fixedSize()
                 Spacer()
                 GlassEffectContainer {
