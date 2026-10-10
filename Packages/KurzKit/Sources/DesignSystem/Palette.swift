@@ -26,6 +26,8 @@ public extension Color {
     private static func adaptive(light: UInt32, dark: UInt32) -> Color {
         #if canImport(UIKit)
         Color(uiColor: UIColor { $0.userInterfaceStyle == .dark ? UIColor(hex: dark) : UIColor(hex: light) })
+        #elseif canImport(AppKit)
+        Color(nsColor: NSColor(name: nil) { $0.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua ? NSColor(hex: dark) : NSColor(hex: light) })
         #else
         Color(hex: light)
         #endif
@@ -40,6 +42,14 @@ public extension Color {
 private extension UIColor {
     convenience init(hex: UInt32) {
         self.init(red: CGFloat(hex >> 16 & 0xFF) / 255, green: CGFloat(hex >> 8 & 0xFF) / 255, blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
+    }
+}
+#endif
+
+#if canImport(AppKit) && !canImport(UIKit)
+private extension NSColor {
+    convenience init(hex: UInt32) {
+        self.init(srgbRed: CGFloat(hex >> 16 & 0xFF) / 255, green: CGFloat(hex >> 8 & 0xFF) / 255, blue: CGFloat(hex & 0xFF) / 255, alpha: 1)
     }
 }
 #endif
