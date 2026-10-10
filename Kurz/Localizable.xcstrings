@@ -1426,6 +1426,39 @@
           }
         }
       }
+    },
+    "Open": {
+      "extractionState": "manual",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abrir"
+          }
+        }
+      }
+    },
+    "Copy time": {
+      "extractionState": "manual",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copiar horário"
+          }
+        }
+      }
+    },
+    "Copy clients": {
+      "extractionState": "manual",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copiar clientes"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

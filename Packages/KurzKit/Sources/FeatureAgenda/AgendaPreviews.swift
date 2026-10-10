@@ -84,6 +84,22 @@ private var unlimited: AgendaSession { AgendaResponse.preview.sessions.first { $
     agenda(.refreshFailing).environment(\.horizontalSizeClass, .compact).preferredColorScheme(.dark)
 }
 
+#Preview("Selected session · iPad", traits: .landscapeLeft) {
+    agenda { $0.selection = sample.id }.environment(\.horizontalSizeClass, .regular)
+}
+
+#Preview("Selected session · iPhone list") {
+    agenda { $0.selection = sample.id }.environment(\.horizontalSizeClass, .compact)
+}
+
+#Preview("Accessibility size · iPad list", traits: .landscapeLeft) {
+    agenda().environment(\.horizontalSizeClass, .regular).environment(\.dynamicTypeSize, .accessibility3)
+}
+
+#Preview("Accessibility size · iPhone day") {
+    agenda(period: .day).environment(\.horizontalSizeClass, .compact).environment(\.dynamicTypeSize, .accessibility3)
+}
+
 #Preview("Other time zone · iPad", traits: .landscapeLeft) {
     agenda(.otherTimeZone).environment(\.horizontalSizeClass, .regular)
 }
@@ -123,9 +139,10 @@ private var unlimited: AgendaSession { AgendaResponse.preview.sessions.first { $
 #Preview("Session blocks", traits: .sizeThatFitsLayout) {
     VStack(spacing: 8) {
         ForEach(AgendaResponse.preview.sessions.prefix(9)) { SessionBlock(session: $0, timeZone: .current).frame(width: 130, height: 52) }
+        SessionBlock(session: sample, timeZone: .current, selected: true).frame(width: 130, height: 52)
         HStack(spacing: 3) {
             ForEach(AgendaResponse.preview.sessions.prefix(2)) { SessionBlock(session: $0, timeZone: .current, compact: true).frame(width: 52, height: 52) }
-            OverflowChip(sessions: Array(AgendaResponse.preview.sessions.prefix(4)), timeZone: .current) { _ in }.frame(width: 27, height: 52)
+            OverflowChip(sessions: Array(AgendaResponse.preview.sessions.prefix(4)), timeZone: .current) { _ in }.frame(width: 29, height: 52)
         }
     }
     .padding()
