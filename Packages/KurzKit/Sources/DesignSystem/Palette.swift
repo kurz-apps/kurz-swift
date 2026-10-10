@@ -11,6 +11,8 @@ public extension Color {
     static let appPrimaryForeground = Color("appPrimaryForeground", bundle: .module)
     static let appAccent = Color("appAccent", bundle: .module)
     static let appAccentForeground = Color("appAccentForeground", bundle: .module)
+    static let appPending = Color("appPending", bundle: .module)
+    static let appPendingForeground = Color("appPendingForeground", bundle: .module)
     static let appDestructive = Color("appDestructive", bundle: .module)
     static let appRing = Color("appRing", bundle: .module)
     static let appPlaceholder = Color("appPlaceholder", bundle: .module)

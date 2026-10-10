@@ -16,6 +16,19 @@ import Testing
         return out
     }
 
+    private func contrast(_ first: [Int], _ second: [Int]) -> Double {
+        func luminance(_ rgb: [Int]) -> Double {
+            let linear = rgb.map { Double($0) / 255 }.map { $0 <= 0.03928 ? $0 / 12.92 : pow(($0 + 0.055) / 1.055, 2.4) }
+            return 0.2126 * linear[0] + 0.7152 * linear[1] + 0.0722 * linear[2]
+        }
+        let sorted = [luminance(first), luminance(second)].sorted()
+        return (sorted[1] + 0.05) / (sorted[0] + 0.05)
+    }
+
+    @Test(arguments: [NSAppearance.Name.aqua, .darkAqua]) func pendingBadgeMeetsAAContrast(_ appearance: NSAppearance.Name) {
+        #expect(contrast(rgb("appPending", appearance), rgb("appPendingForeground", appearance)) >= 4.5)
+    }
+
     @Test func backgroundFollowsTheAppearance() {
         #expect(rgb("appBackground", .aqua) == [0xF7, 0xF8, 0xFA])
         #expect(rgb("appBackground", .darkAqua) == [0x10, 0x14, 0x18])

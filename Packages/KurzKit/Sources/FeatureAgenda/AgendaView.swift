@@ -259,6 +259,8 @@ struct TimeGrid: View {
     let select: (AgendaSession) -> Void
     private let hourHeight: CGFloat = 52
     private let gutter: CGFloat = 48
+    private let minLaneWidth: CGFloat = 52
+    private let chipWidth: CGFloat = 30
 
     var body: some View {
         let byDate = Dictionary(uniqueKeysWithValues: days.map { ($0.date, $0.sessions) })
@@ -310,23 +312,35 @@ struct TimeGrid: View {
                     }
                     .padding(.vertical, 8)
                 }
-                .onAppear { proxy.scrollTo(max(0, Int(minutes(.now) / 60) - 2), anchor: .top) }
+                .onChange(of: model.dates, initial: true) {
+                    let earliest = days.flatMap(\.sessions).map { minutes($0.startsAt) }.min()
+                    let showsToday = model.dates.contains { model.calendar.isDateInToday($0) }
+                    proxy.scrollTo(Self.initialHour(earliest: earliest, now: showsToday ? minutes(.now) : nil), anchor: .top)
+                }
             }
         }
     }
 
     private func column(date: Date, sessions: [AgendaSession]) -> some View {
-        let lanes = Self.lanes(sessions)
-        return GeometryReader { geometry in
-            let width = geometry.size.width / CGFloat(lanes.count)
+        GeometryReader { geometry in
+            let width = geometry.size.width
+            let maxLanes = max(1, Int(width / minLaneWidth))
+            let layout = LaneLayout(sessions, maxLanes: maxLanes)
+            let overflowWidth = maxLanes == 1 ? width : chipWidth
             ForEach(sessions) { session in
-                let top = minutes(session.startsAt) / 60 * hourHeight
-                let height = max(26, Double(session.duration ?? 30) / 60 * hourHeight - 2)
-                SessionBlock(session: session, timeZone: timeZone)
-                    .frame(width: width - 3, height: min(height, 24 * hourHeight - top))
-                    .offset(x: CGFloat(lanes.index[session.id] ?? 0) * width + 1.5, y: top + 1)
-                    .onTapGesture { select(session) }
-                    .accessibilityAction { select(session) }
+                if let placement = layout.placements[session.id] {
+                    let laneWidth = (width - (placement.reservesChip ? chipWidth : 0)) / CGFloat(placement.lanes)
+                    SessionBlock(session: session, timeZone: timeZone, compact: laneWidth < 56)
+                        .frame(width: laneWidth - 3, height: height(session.startsAt, session.endsAt))
+                        .offset(x: CGFloat(placement.lane) * laneWidth + 1.5, y: top(session.startsAt))
+                        .onTapGesture { select(session) }
+                        .accessibilityAction { select(session) }
+                }
+            }
+            ForEach(layout.overflows) { overflow in
+                OverflowChip(sessions: overflow.sessions, timeZone: timeZone, summary: maxLanes == 1, select: select)
+                    .frame(width: overflowWidth - 3, height: height(overflow.start, overflow.end))
+                    .offset(x: width - overflowWidth + 1.5, y: top(overflow.start))
             }
             if model.calendar.isDateInToday(date) {
                 Rectangle().fill(Color.appDestructive).frame(height: 1.5)
@@ -339,6 +353,15 @@ struct TimeGrid: View {
         .overlay(alignment: .leading) { Rectangle().fill(Color.appBorder).frame(width: 0.5) }
     }
 
+    private func top(_ start: Date) -> CGFloat {
+        minutes(start) / 60 * hourHeight + 1
+    }
+
+    private func height(_ start: Date, _ end: Date?) -> CGFloat {
+        let duration = (end ?? start.addingTimeInterval(1800)).timeIntervalSince(start) / 3600 * hourHeight - 2
+        return min(max(26, duration), 24 * hourHeight - top(start))
+    }
+
     private func minutes(_ date: Date) -> Double {
         var calendar = Calendar(identifier: .gregorian)
         calendar.timeZone = timeZone
@@ -346,20 +369,118 @@ struct TimeGrid: View {
         return Double((parts.hour ?? 0) * 60 + (parts.minute ?? 0))
     }
 
-    static func lanes(_ sessions: [AgendaSession]) -> (index: [String: Int], count: Int) {
+    static func initialHour(earliest: Double?, now: Double?) -> Int {
+        let firstBusy = earliest.map { Int($0 / 60) - 1 }
+        let hour = now.map { Int($0 / 60) - 2 }.map { max($0, firstBusy ?? $0) } ?? firstBusy ?? 7
+        return min(max(hour, 0), 23)
+    }
+}
+
+struct LaneLayout {
+    struct Placement: Equatable {
+        let lane: Int
+        let lanes: Int
+        let reservesChip: Bool
+    }
+
+    struct Overflow: Identifiable {
+        let sessions: [AgendaSession]
+        var id: String { sessions[0].id }
+        var start: Date { sessions.map(\.startsAt).min() ?? .distantPast }
+        var end: Date { sessions.map { $0.endsAt ?? $0.startsAt.addingTimeInterval(1800) }.max() ?? start }
+    }
+
+    private(set) var placements: [String: Placement] = [:]
+    private(set) var overflows: [Overflow] = []
+
+    init(_ sessions: [AgendaSession], maxLanes: Int) {
+        var cluster: [(session: AgendaSession, lane: Int)] = []
         var ends: [Date] = []
-        var index: [String: Int] = [:]
+        var clusterEnd = Date.distantPast
+        func flush() {
+            let kept = ends.count <= maxLanes ? ends.count : maxLanes - 1
+            for item in cluster where item.lane < kept {
+                placements[item.session.id] = Placement(lane: item.lane, lanes: kept, reservesChip: kept < ends.count)
+            }
+            let hidden = cluster.filter { $0.lane >= kept }.map(\.session)
+            if !hidden.isEmpty { overflows.append(Overflow(sessions: hidden)) }
+            cluster = []
+            ends = []
+        }
         for session in sessions.sorted(by: { $0.startsAt < $1.startsAt }) {
             let end = session.endsAt ?? session.startsAt.addingTimeInterval(1800)
-            if let lane = ends.firstIndex(where: { $0 <= session.startsAt }) {
-                ends[lane] = end
-                index[session.id] = lane
-            } else {
-                index[session.id] = ends.count
-                ends.append(end)
-            }
+            if session.startsAt >= clusterEnd { flush() }
+            let lane = ends.firstIndex { $0 <= session.startsAt } ?? ends.count
+            if lane == ends.count { ends.append(end) } else { ends[lane] = end }
+            cluster.append((session, lane))
+            clusterEnd = max(clusterEnd, end)
         }
-        return (index, max(ends.count, 1))
+        flush()
+    }
+}
+
+struct OverflowChip: View {
+    let sessions: [AgendaSession]
+    let timeZone: TimeZone
+    var summary = false
+    let select: (AgendaSession) -> Void
+    @State private var showing = false
+
+    var body: some View {
+        Button { showing = true } label: {
+            VStack(alignment: summary ? .leading : .center, spacing: 3) {
+                if summary {
+                    Text(time(sessions[0].startsAt, timeZone.identifier)).font(.caption2.weight(.semibold).monospacedDigit())
+                    HStack(spacing: 3) {
+                        ForEach(sessions.prefix(4)) { session in
+                            Circle().fill(Color.appCategory(id: session.category?.id, name: session.category?.name)).frame(width: 7, height: 7)
+                        }
+                    }
+                    Label { Text(sessions.count, format: .number) } icon: { Image(systemName: "rectangle.stack.fill").imageScale(.small) }
+                        .labelStyle(.titleAndIcon)
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(Color.appMutedForeground)
+                } else {
+                    Text(verbatim: "+\(sessions.count)").font(.caption.weight(.semibold).monospacedDigit())
+                }
+            }
+            .lineLimit(1)
+            .foregroundStyle(Color.appForeground)
+            .padding(.horizontal, summary ? 7 : 0)
+            .padding(.top, 4)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: summary ? .topLeading : .top)
+            .background(Color.appMuted, in: RoundedRectangle(cornerRadius: 6))
+            .overlay { RoundedRectangle(cornerRadius: 6).strokeBorder(Color.appBorder) }
+            .contentShape(.rect)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(summary ? Text("\(sessions.count) sessions") : Text("\(sessions.count) more sessions"))
+        .popover(isPresented: $showing) {
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(sessions) { session in
+                    Button {
+                        showing = false
+                        select(session)
+                    } label: {
+                        HStack(spacing: 10) {
+                            Circle().fill(Color.appCategory(id: session.category?.id, name: session.category?.name)).frame(width: 8, height: 8)
+                            Text(time(session.startsAt, timeZone.identifier)).monospacedDigit().foregroundStyle(Color.appMutedForeground)
+                            Text(session.serviceName ?? session.formTitle).foregroundStyle(Color.appForeground)
+                            Spacer(minLength: 12)
+                            Text(occupancy(session)).font(.caption).foregroundStyle(Color.appMutedForeground)
+                        }
+                        .font(.subheadline)
+                        .padding(.vertical, 10)
+                        .contentShape(.rect)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(.horizontal)
+            .padding(.vertical, 6)
+            .frame(minWidth: 300)
+            .presentationCompactAdaptation(.popover)
+        }
     }
 }
 
@@ -382,14 +503,28 @@ func time(_ date: Date, _ timeZone: String) -> String {
 struct SessionBlock: View {
     let session: AgendaSession
     let timeZone: TimeZone
+    var compact = false
 
     var body: some View {
         let color = Color.appCategory(id: session.category?.id, name: session.category?.name)
         let shape = RoundedRectangle(cornerRadius: 6)
+        let title = session.serviceName ?? session.formTitle
+        let details = time(session.startsAt, timeZone.identifier) + " · " + occupancy(session)
         VStack(alignment: .leading, spacing: 1) {
-            Text(session.serviceName ?? session.formTitle).font(.caption.weight(.semibold)).lineLimit(2)
-            Text(time(session.startsAt, timeZone.identifier) + " · " + occupancy(session)).font(.caption2).foregroundStyle(Color.appMutedForeground)
+            if compact {
+                Text(time(session.startsAt, timeZone.identifier)).font(.caption2.weight(.semibold).monospacedDigit())
+                HStack(spacing: 2) {
+                    Image(systemName: "person.fill").imageScale(.small)
+                    Text(session.appointments.count, format: .number)
+                }
+                .font(.caption2.monospacedDigit())
+                .foregroundStyle(Color.appMutedForeground)
+            } else {
+                Text(title).font(.caption.weight(.semibold)).lineLimit(2)
+                Text(details).font(.caption2).foregroundStyle(Color.appMutedForeground)
+            }
         }
+        .lineLimit(compact ? 1 : nil)
         .foregroundStyle(Color.appForeground)
         .padding(.leading, 7).padding(.trailing, 3).padding(.vertical, 3)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
@@ -400,7 +535,8 @@ struct SessionBlock: View {
         }
         .clipShape(shape)
         .contentShape(shape)
-        .accessibilityElement(children: .combine)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: title + ", " + details))
         .accessibilityAddTraits(.isButton)
     }
 }
@@ -437,7 +573,7 @@ struct SessionRow: View {
 
             VStack(alignment: .leading, spacing: 6) {
                 Text(session.serviceName ?? session.formTitle).font(.headline).foregroundStyle(Color.appForeground)
-                Text(session.formTitle + " · " + occupancy(session)).font(.caption).foregroundStyle(Color.appMutedForeground)
+                Text(session.capacity == 1 && !session.appointments.isEmpty ? session.formTitle : session.formTitle + " · " + occupancy(session)).font(.caption).foregroundStyle(Color.appMutedForeground)
                 ForEach(session.appointments) { appointment in
                     HStack {
                         Label(appointment.clientName ?? "—", systemImage: "person")
@@ -523,8 +659,8 @@ struct StatusBadge: View {
     var body: some View {
         Text(label).font(.caption2.weight(.semibold))
             .padding(.horizontal, 8).padding(.vertical, 3)
-            .foregroundStyle(status == "pending" ? Color.appAccentForeground : Color.appPrimaryForeground)
-            .background(status == "pending" ? Color.appAccent : Color.appPrimary, in: Capsule())
+            .foregroundStyle(status == "pending" ? Color.appPendingForeground : Color.appPrimaryForeground)
+            .background(status == "pending" ? Color.appPending : Color.appPrimary, in: Capsule())
     }
 
     private var label: LocalizedStringKey {

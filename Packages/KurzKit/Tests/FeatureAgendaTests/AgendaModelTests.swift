@@ -133,8 +133,39 @@ private func session(_ date: String, hour: Int, form: Int = 1, category: String?
         #expect(Color.appCategory(id: "cat-1", name: "Yoga") == Color.appCategory(id: "cat-1"))
     }
 
-    @Test func overlappingSessionsGetSideBySideLanes() {
-        let lanes = TimeGrid.lanes([session("2026-10-06", hour: 9), session("2026-10-06", hour: 9, service: "T"), session("2026-10-06", hour: 10, service: "U")])
-        #expect(lanes.count == 2)
+    @Test func overlappingSessionsGetSideBySideLanesPerCluster() {
+        let first = session("2026-10-06", hour: 9), second = session("2026-10-06", hour: 9, service: "T")
+        let third = session("2026-10-06", hour: 10, service: "U"), alone = session("2026-10-06", hour: 12, service: "V")
+        let layout = LaneLayout([first, second, third, alone], maxLanes: 2)
+        #expect(layout.placements[first.id] == .init(lane: 0, lanes: 2, reservesChip: false))
+        #expect(layout.placements[second.id] == .init(lane: 1, lanes: 2, reservesChip: false))
+        #expect(layout.placements[third.id] == .init(lane: 0, lanes: 1, reservesChip: false))
+        #expect(layout.placements[alone.id] == .init(lane: 0, lanes: 1, reservesChip: false))
+        #expect(layout.overflows.isEmpty)
+    }
+
+    @Test func lanesBeyondTheCapCollapseIntoAnOverflowChip() {
+        let sessions = ["A", "B", "C", "D"].map { session("2026-10-06", hour: 9, service: $0) }
+        let capped = LaneLayout(sessions, maxLanes: 2)
+        #expect(capped.placements.count == 1)
+        #expect(capped.placements[sessions[0].id] == .init(lane: 0, lanes: 1, reservesChip: true))
+        #expect(capped.overflows.map { $0.sessions.map(\.serviceName) } == [["B", "C", "D"]])
+        #expect(capped.overflows[0].start == sessions[0].startsAt)
+        let narrow = LaneLayout(sessions, maxLanes: 1)
+        #expect(narrow.placements.isEmpty)
+        #expect(narrow.overflows.map(\.sessions.count) == [4])
+        let roomy = LaneLayout(sessions, maxLanes: 4)
+        #expect(roomy.placements.count == 4)
+        #expect(roomy.overflows.isEmpty)
+    }
+
+    @Test func initialHourFollowsNowAndTheFirstSession() {
+        #expect(TimeGrid.initialHour(earliest: 8 * 60, now: 12 * 60 + 38) == 10)
+        #expect(TimeGrid.initialHour(earliest: 9 * 60 + 30, now: 6 * 60) == 8)
+        #expect(TimeGrid.initialHour(earliest: nil, now: 15 * 60) == 13)
+        #expect(TimeGrid.initialHour(earliest: nil, now: 60) == 0)
+        #expect(TimeGrid.initialHour(earliest: 10 * 60, now: nil) == 9)
+        #expect(TimeGrid.initialHour(earliest: 0, now: nil) == 0)
+        #expect(TimeGrid.initialHour(earliest: nil, now: nil) == 7)
     }
 }
