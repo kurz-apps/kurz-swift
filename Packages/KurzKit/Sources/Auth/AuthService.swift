@@ -6,9 +6,9 @@ public struct AuthService: Sendable {
     public let api: APIClient
     private let store: TokenStore
 
-    public init(configuration: APIConfiguration, store: TokenStore) {
+    public init(configuration: APIConfiguration, store: TokenStore, attest: AppAttestClient? = nil) {
         self.store = store
-        api = APIClient(configuration: configuration, token: { store.load() })
+        api = APIClient(configuration: configuration, attest: attest, token: { store.load() })
     }
 
     public func signIn(email: String, password: String) async throws -> CurrentUser {

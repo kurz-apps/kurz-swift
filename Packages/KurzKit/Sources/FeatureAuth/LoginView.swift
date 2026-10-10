@@ -195,6 +195,7 @@ public struct LoginView: View {
         switch api {
         case .unauthorized: return unauthorized
         case .server(429, _): return "Too many attempts. Please wait a few minutes and try again."
+        case .server(403, "captcha_failed"): return "Verification failed. We could not confirm you are human. Please try again."
         case .server(403, _): return "Your account has been deactivated. Contact support if you believe this is a mistake."
         case .server(_, "google_invalid_token"): return "Google sign-in did not go through. Please try again."
         case .server(_, "google_email_not_verified"): return "Your Google account e-mail is not verified yet, so it can't be used to sign in."

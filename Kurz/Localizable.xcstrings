@@ -1245,6 +1245,16 @@
           }
         }
       }
+    },
+    "Verification failed. We could not confirm you are human. Please try again.": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verificação falhada. Não conseguimos confirmar que é uma pessoa. Tente novamente."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

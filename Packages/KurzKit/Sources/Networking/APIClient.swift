@@ -39,9 +39,13 @@ public struct APIConfiguration: Sendable {
 public struct APIClient: Sendable {
     public var configuration: APIConfiguration
     public var token: @Sendable () async -> String?
+    public var attest: AppAttestClient?
 
-    public init(configuration: APIConfiguration, token: @escaping @Sendable () async -> String?) {
+    public static let attestedPaths: Set<String> = ["api/login_request", "api/login/password", "api/signup", "api/password/forgot", "api/password/reset"]
+
+    public init(configuration: APIConfiguration, attest: AppAttestClient? = nil, token: @escaping @Sendable () async -> String?) {
         self.configuration = configuration
+        self.attest = attest
         self.token = token
     }
 
@@ -72,6 +76,20 @@ public struct APIClient: Sendable {
         request.httpShouldHandleCookies = false
         if let token = await token() { request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
 
+        guard let attest, Self.attestedPaths.contains(endpoint.path) else { return try await load(request) }
+        var headers = await attest.headers(for: request.httpBody ?? Data())
+        var response = try await load(request, headers)
+        if !headers.isEmpty, [400, 401, 403].contains(response.1.statusCode), ["invalid_attestation", "captcha_failed"].contains(Self.message(in: response.0)) {
+            await attest.reject(headers)
+            headers = await attest.headers(for: request.httpBody ?? Data())
+            if !headers.isEmpty { response = try await load(request, headers) }
+        }
+        return response
+    }
+
+    private func load(_ request: URLRequest, _ headers: [String: String] = [:]) async throws -> (Data, HTTPURLResponse) {
+        var request = request
+        for (field, value) in headers { request.setValue(value, forHTTPHeaderField: field) }
         let (data, response) = try await configuration.session.data(for: request)
         guard let http = response as? HTTPURLResponse else { throw APIError.invalidResponse }
         return (data, http)

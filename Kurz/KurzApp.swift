@@ -9,7 +9,8 @@ import SwiftUI
         let env = ProcessInfo.processInfo.environment
         let configuration = env["KURZ_API_URL"].flatMap(URL.init(string:)).map { APIConfiguration(baseURL: $0) } ?? .production
         let store: TokenStore = env["KURZ_FRESH_INSTALL"] == "1" ? MemoryTokenStore() : KeychainTokenStore()
-        _session = State(initialValue: SessionStore(auth: AuthService(configuration: configuration, store: store)))
+        let attest = AppAttestClient(configuration: configuration, attestor: DeviceAppAttestor(), store: KeychainTokenStore(account: "app-attest-key"))
+        _session = State(initialValue: SessionStore(auth: AuthService(configuration: configuration, store: store, attest: attest)))
     }
 
     var body: some Scene {
