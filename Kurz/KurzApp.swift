@@ -16,5 +16,8 @@ import SwiftUI
         WindowGroup {
             ContentView(session: session)
         }
+        #if os(macOS)
+        .windowToolbarStyle(.unified(showsTitle: false))
+        #endif
     }
 }
