@@ -22,7 +22,7 @@ let package = Package(
         .target(name: "FeatureAgenda", dependencies: ["Domain", "Networking", "DesignSystem"]),
         .target(name: "FeatureShell", dependencies: ["Domain", "DesignSystem", "FeatureAgenda"]),
         .testTarget(name: "FeatureShellTests", dependencies: ["FeatureShell", "Domain"]),
-        .testTarget(name: "FeatureAgendaTests", dependencies: ["FeatureAgenda", "Domain"]),
+        .testTarget(name: "FeatureAgendaTests", dependencies: ["FeatureAgenda", "Domain", "DesignSystem"]),
         .testTarget(name: "DesignSystemTests", dependencies: ["DesignSystem"]),
         .testTarget(name: "AuthTests", dependencies: ["Auth", "Networking", "Domain"]),
         .testTarget(name: "DomainTests", dependencies: ["Domain"]),

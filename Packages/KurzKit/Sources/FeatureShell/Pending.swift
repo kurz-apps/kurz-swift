@@ -16,14 +16,13 @@ public struct PendingDay: Equatable, Identifiable, Sendable {
 }
 
 public func pendingDays(in agenda: AgendaResponse) -> [PendingDay] {
-    agenda.days.compactMap { day in
-        let items = day.sessions.flatMap { session in
-            session.appointments.filter { $0.status == "pending" }.map {
-                PendingItem(id: $0.id, clientName: $0.clientName, serviceName: session.serviceName ?? session.formTitle, startsAt: session.startsAt)
-            }
-        }
-        return items.isEmpty ? nil : PendingDay(date: day.date, items: items)
+    let pending = agenda.sessions.sorted { $0.startsAt < $1.startsAt }.map { session in
+        (date: session.date, items: session.appointments.filter { $0.status == "pending" }.map {
+            PendingItem(id: $0.id, clientName: $0.clientName, serviceName: session.serviceName ?? session.formTitle, startsAt: session.startsAt)
+        })
     }
+    let grouped = Dictionary(grouping: pending.filter { !$0.items.isEmpty }, by: \.date)
+    return grouped.map { PendingDay(date: $0.key, items: $0.value.flatMap(\.items)) }.sorted { $0.date < $1.date }
 }
 
 public func pendingCount(in agenda: AgendaResponse) -> Int {
