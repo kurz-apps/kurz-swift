@@ -4,7 +4,7 @@ import FeatureAgenda
 import SwiftUI
 
 struct PendingView: View {
-    let model: AgendaModel
+    let model: PendingModel
 
     var body: some View {
         NavigationStack {
@@ -16,19 +16,8 @@ struct PendingView: View {
     }
 
     @ViewBuilder private var content: some View {
-        switch model.phase {
-        case .idle, .loading:
-            ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
-        case .failed(let message):
-            ContentUnavailableView {
-                Label("Couldn't load your agenda", systemImage: "calendar.badge.exclamationmark")
-            } description: {
-                Text(message)
-            } actions: {
-                Button("Try again") { Task { await model.refresh() } }.buttonStyle(.glassProminent).tint(Color.appPrimary)
-            }
-        case .loaded(let agenda):
-            let days = pendingDays(in: agenda)
+        if let agenda = model.response {
+            let days = model.days
             if days.isEmpty {
                 ContentUnavailableView("No pending approvals", systemImage: "checkmark.circle", description: Text("Nothing is waiting for your approval."))
                     .accessibilityIdentifier("pending-empty")
@@ -43,8 +32,23 @@ struct PendingView: View {
                 .listStyle(.inset)
                 .scrollContentBackground(.hidden)
                 .refreshable { await model.refresh() }
+                .safeAreaInset(edge: .top) {
+                    if let error = model.error {
+                        Label(error, systemImage: "exclamationmark.triangle").font(.footnote).foregroundStyle(.red).padding(8).frame(maxWidth: .infinity).background(.bar)
+                    }
+                }
                 .accessibilityIdentifier("pending-list")
             }
+        } else if let error = model.error {
+            ContentUnavailableView {
+                Label("Couldn't load your agenda", systemImage: "calendar.badge.exclamationmark")
+            } description: {
+                Text(error)
+            } actions: {
+                Button("Try again") { Task { await model.refresh() } }.buttonStyle(.glassProminent).tint(Color.appPrimary)
+            }
+        } else {
+            ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
         }
     }
 
