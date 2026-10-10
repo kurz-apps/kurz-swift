@@ -1,6 +1,5 @@
 import Foundation
 
-/// GET /api/me, and the body of every successful login.
 public struct CurrentUser: Codable, Sendable, Equatable, Identifiable {
     public var id: Int
     public var email: String

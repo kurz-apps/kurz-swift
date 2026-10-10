@@ -1,12 +1,10 @@
 import Foundation
 
-/// GET /api/me/agenda?from=&to=
 public struct AgendaResponse: Codable, Sendable, Equatable {
     public var timeZone: String
     public var sessions: [AgendaSession]
 }
 
-/// One bookable time slot of a service, with who booked it.
 public struct AgendaSession: Codable, Sendable, Equatable, Identifiable {
     public struct Category: Codable, Sendable, Equatable {
         public var id: String
@@ -20,7 +18,6 @@ public struct AgendaSession: Codable, Sendable, Equatable, Identifiable {
     public var category: Category?
     public var duration: Int?
     public var startsAt: Date
-    /// Calendar day in the owner's time zone, `yyyy-MM-dd`.
     public var date: String
     public var capacity: Int?
     public var booked: Int
