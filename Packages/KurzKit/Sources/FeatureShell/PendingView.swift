@@ -26,7 +26,7 @@ struct PendingView: View {
                     Section {
                         ForEach(day.items) { PendingRow(item: $0, timeZone: agenda.timeZone) }
                     } header: {
-                        Text(header(day.date)).font(.subheadline.weight(.semibold)).foregroundStyle(Color.appPrimary).textCase(nil)
+                        DayHeader(date: day.date, relativeNames: false, timeZone: TimeZone(identifier: agenda.timeZone) ?? .current)
                     }
                 }
                 .listStyle(.inset)
@@ -40,21 +40,10 @@ struct PendingView: View {
                 .accessibilityIdentifier("pending-list")
             }
         } else if let error = model.error {
-            ContentUnavailableView {
-                Label("Couldn't load your agenda", systemImage: "calendar.badge.exclamationmark")
-            } description: {
-                Text(error)
-            } actions: {
-                Button("Try again") { Task { await model.refresh() } }.buttonStyle(.glassProminent).tint(Color.appPrimary)
-            }
+            LoadFailedView("Couldn't load your agenda", message: error) { Task { await model.refresh() } }
         } else {
             ProgressView().frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-    }
-
-    private func header(_ date: String) -> String {
-        guard let day = try? Date(date, strategy: .iso8601.year().month().day()) else { return date }
-        return day.formatted(.dateTime.weekday(.wide).day().month(.wide)).capitalized
     }
 }
 
