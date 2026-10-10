@@ -6,7 +6,6 @@ public enum APIError: Error, Equatable, Sendable {
     case invalidResponse
 }
 
-/// A request and the type of its response body.
 public struct Endpoint<Response: Decodable & Sendable>: Sendable {
     public var method: String
     public var path: String
@@ -25,7 +24,6 @@ public struct Endpoint<Response: Decodable & Sendable>: Sendable {
     }
 }
 
-/// Where requests go and how they are sent; tests plug in a `URLProtocol` session.
 public struct APIConfiguration: Sendable {
     public var baseURL: URL
     public var session: URLSession
@@ -38,7 +36,6 @@ public struct APIConfiguration: Sendable {
     public static let production = APIConfiguration(baseURL: URL(string: "https://api.kurz.fyi")!)
 }
 
-/// Sends authenticated JSON requests. `token` is read on every request so a refreshed or cleared session applies at once.
 public struct APIClient: Sendable {
     public var configuration: APIConfiguration
     public var token: @Sendable () async -> String?
@@ -53,7 +50,6 @@ public struct APIClient: Sendable {
         do { return try Self.decoder.decode(R.self, from: data) } catch { throw APIError.invalidResponse }
     }
 
-    /// For responses with no body or where headers matter (login returns the session as a cookie).
     public func raw<R>(_ endpoint: Endpoint<R>) async throws -> (Data, HTTPURLResponse) {
         guard var url = URLComponents(url: configuration.baseURL.appending(path: endpoint.path), resolvingAgainstBaseURL: false) else {
             throw APIError.invalidResponse
@@ -64,7 +60,6 @@ public struct APIClient: Sendable {
         request.httpBody = endpoint.body
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         if endpoint.body != nil { request.setValue("application/json", forHTTPHeaderField: "Content-Type") }
-        // The session lives in the Keychain, not in URLSession's cookie jar.
         request.httpShouldHandleCookies = false
         if let token = await token() { request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
 
@@ -79,7 +74,7 @@ public struct APIClient: Sendable {
         }
     }
 
-    static let decoder: JSONDecoder = {
+    public static let decoder: JSONDecoder = {
         let d = JSONDecoder()
         d.keyDecodingStrategy = .convertFromSnakeCase
         d.dateDecodingStrategy = .iso8601
@@ -88,7 +83,6 @@ public struct APIClient: Sendable {
 }
 
 public extension HTTPURLResponse {
-    /// The backend returns the session JWT only as the httpOnly `kurz_session` cookie; we read it from the header and keep it ourselves.
     var sessionToken: String? {
         let fields = allHeaderFields.reduce(into: [String: String]()) { if let k = $1.key as? String, let v = $1.value as? String { $0[k] = v } }
         guard let url else { return nil }

@@ -44,6 +44,12 @@
         }
       }
     },
+    "Can't reach Kurz" : {
+
+    },
+    "Check your connection and try again." : {
+
+    },
     "Couldn't load your schedule" : {
       "localizations" : {
         "pt" : {
@@ -235,6 +241,7 @@
       }
     },
     "Sign in to see your appointments. Access is read-only and the summary is generated on your device with Apple Intelligence." : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -245,6 +252,7 @@
       }
     },
     "Sign in with Kurz" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -263,6 +271,9 @@
           }
         }
       }
+    },
+    "Signed in as %@" : {
+
     },
     "Summary" : {
       "localizations" : {
@@ -355,6 +366,7 @@
       }
     },
     "Your Kurz schedule" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
