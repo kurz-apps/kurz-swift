@@ -40,7 +40,8 @@ public extension AgendaResponse {
             ("Yoga em grupo", "Bem-estar", nil, 14, 0, 60, 0, [(0, "confirmed"), (3, "confirmed"), (5, "unverified"), (7, "confirmed")]),
             ("Zumba", "Aulas de dança", dance, 17, 30, 60, 12, [(1, "confirmed"), (2, "confirmed"), (6, "pending"), (7, "confirmed")]),
             ("Massagem de pedras quentes", "Massagens", spa, 19, 0, 90, 1, [(4, "confirmed")]),
-            ("Canto", "Aulas de música", music, 16, 0, 30, 1, [])
+            ("Canto", "Aulas de música", music, 16, 0, 30, 1, []),
+            ("Violino", "Aulas de música", music, 10, 15, 45, 1, [(7, "pending")])
         ]
         var sessions: [AgendaSession] = []
         for offset in -7...7 {

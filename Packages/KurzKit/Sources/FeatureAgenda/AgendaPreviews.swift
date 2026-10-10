@@ -1,4 +1,5 @@
 #if DEBUG
+import DesignSystem
 import Domain
 import SwiftUI
 
@@ -21,6 +22,14 @@ private var unlimited: AgendaSession { AgendaResponse.preview.sessions.first { $
 
 #Preview("Week · iPad · pt-PT", traits: .landscapeLeft) {
     agenda().environment(\.horizontalSizeClass, .regular).environment(\.locale, Locale(identifier: "pt-PT"))
+}
+
+#Preview("Week · iPad portrait · 4 overlapping", traits: .portrait) {
+    agenda().environment(\.horizontalSizeClass, .regular)
+}
+
+#Preview("Week · iPad portrait · 4 overlapping · dark", traits: .portrait) {
+    agenda().environment(\.horizontalSizeClass, .regular).preferredColorScheme(.dark)
 }
 
 #Preview("Week · iPhone") {
@@ -86,6 +95,10 @@ private var unlimited: AgendaSession { AgendaResponse.preview.sessions.first { $
 #Preview("Session blocks", traits: .sizeThatFitsLayout) {
     VStack(spacing: 8) {
         ForEach(AgendaResponse.preview.sessions.prefix(9)) { SessionBlock(session: $0, timeZone: .current).frame(width: 130, height: 52) }
+        HStack(spacing: 3) {
+            ForEach(AgendaResponse.preview.sessions.prefix(2)) { SessionBlock(session: $0, timeZone: .current, compact: true).frame(width: 52, height: 52) }
+            OverflowChip(sessions: Array(AgendaResponse.preview.sessions.prefix(4)), timeZone: .current) { _ in }.frame(width: 27, height: 52)
+        }
     }
     .padding()
 }
@@ -95,7 +108,7 @@ private var unlimited: AgendaSession { AgendaResponse.preview.sessions.first { $
         .frame(width: 400, height: 900)
 }
 
-#Preview("Day header and badges", traits: .sizeThatFitsLayout) {
+@MainActor private var headersAndBadges: some View {
     VStack(alignment: .leading, spacing: 12) {
         DayHeader(date: AgendaModel.preview().key(.now))
         DayHeader(date: AgendaModel.preview().key(.now.addingTimeInterval(86400)))
@@ -103,5 +116,14 @@ private var unlimited: AgendaSession { AgendaResponse.preview.sessions.first { $
         HStack { StatusBadge(status: "confirmed"); StatusBadge(status: "pending"); StatusBadge(status: "unverified") }
     }
     .padding()
+    .background(Color.appBackground)
+}
+
+#Preview("Day header and badges", traits: .sizeThatFitsLayout) {
+    headersAndBadges.preferredColorScheme(.light)
+}
+
+#Preview("Day header and badges · dark", traits: .sizeThatFitsLayout) {
+    headersAndBadges.preferredColorScheme(.dark)
 }
 #endif
