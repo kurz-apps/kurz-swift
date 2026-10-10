@@ -27,7 +27,7 @@ struct ContentView: View {
                     Button("Try again") { Task { await session.restore() } }.buttonStyle(.borderedProminent)
                 }
             case .signedIn(let user):
-                RootView(model: AgendaModel(api: session.auth.api), userEmail: user.email) { Task { await session.signOut() } }
+                RootView(model: AgendaModel(api: session.auth.api), pending: PendingModel(api: session.auth.api), userEmail: user.email) { Task { await session.signOut() } }
             }
         }
         .tint(Color.appPrimary)
