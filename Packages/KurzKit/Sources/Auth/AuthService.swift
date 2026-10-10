@@ -11,6 +11,14 @@ public struct AuthService: Sendable {
         api = APIClient(configuration: configuration, token: { store.load() })
     }
 
+    public func signIn(email: String, password: String) async throws -> CurrentUser {
+        let (data, http) = try await api.raw(try .post("api/login/password", json: ["email": email, "password": password]) as Endpoint<UserEnvelope>)
+        guard let token = http.sessionToken else { throw APIError.invalidResponse }
+        let user = try APIClient.decoder.decode(UserEnvelope.self, from: data).user
+        store.save(token)
+        return user
+    }
+
     public func requestCode(email: String, locale: String? = nil) async throws {
         _ = try await api.raw(try .post("api/login_request", json: ["email": email, "locale": locale].compactMapValues { $0 }) as Endpoint<Empty>)
     }

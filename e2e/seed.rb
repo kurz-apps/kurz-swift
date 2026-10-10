@@ -1,5 +1,7 @@
 user = User.find_by!(email: "dev.kurz@gmail.com")
 user.update!(time_zone: "UTC")
+user.mark_verified!
+user.change_password!("e2e-Password-123")
 user.forms.where(title: "Kurz E2E").destroy_all
 
 form = Form.create!(user: user, title: "Kurz E2E")

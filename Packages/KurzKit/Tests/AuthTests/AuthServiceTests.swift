@@ -59,4 +59,14 @@ private let userJSON = #"{"user":{"id":1,"email":"a@b.co","admin":false,"time_zo
         await service(store).signOut()
         #expect(store.load() == nil)
     }
+
+    @Test func passwordSignInStoresTheCookieToken() async throws {
+        Stub.handler = { req in
+            #expect(req.url?.path == "/api/login/password")
+            return (200, ["Set-Cookie": "kurz_session=pw1; path=/; httponly"], Data(userJSON.utf8))
+        }
+        let store = MemoryTokenStore()
+        _ = try await service(store).signIn(email: "a@b.co", password: "secret123")
+        #expect(store.load() == "pw1")
+    }
 }

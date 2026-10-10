@@ -31,6 +31,32 @@ final class LoginE2ETests: XCTestCase {
         XCTAssertTrue(app.textFields["email-field"].waitForExistence(timeout: 10))
     }
 
+    @MainActor func testPasswordSignInShowsTheAgenda() {
+        let app = launch()
+        let email = app.textFields["email-field"]
+        XCTAssertTrue(email.waitForExistence(timeout: 10))
+        email.tap()
+        email.typeText(Self.email)
+        let password = app.secureTextFields["password-field"]
+        password.tap()
+        password.typeText("e2e-Password-123")
+        app.buttons["login-button"].tap()
+        XCTAssertTrue(app.navigationBars["Agenda"].waitForExistence(timeout: 10))
+    }
+
+    @MainActor func testWrongPasswordShowsAnError() {
+        let app = launch()
+        let email = app.textFields["email-field"]
+        XCTAssertTrue(email.waitForExistence(timeout: 10))
+        email.tap()
+        email.typeText(Self.email)
+        let password = app.secureTextFields["password-field"]
+        password.tap()
+        password.typeText("wrong-password")
+        app.buttons["login-button"].tap()
+        XCTAssertTrue(app.staticTexts["login-error"].waitForExistence(timeout: 10))
+    }
+
     @MainActor func testWrongCodeShowsAnErrorAndStaysOnTheCodeStep() {
         let app = launch()
         signIn(app, code: "1111111")
