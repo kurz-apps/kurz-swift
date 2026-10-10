@@ -1,5 +1,6 @@
 import Auth
 import Domain
+import FeatureAgenda
 import FeatureAuth
 import SwiftUI
 
@@ -20,10 +21,7 @@ struct ContentView: View {
                     Button("Try again") { Task { await session.restore() } }.buttonStyle(.borderedProminent)
                 }
             case .signedIn(let user):
-                VStack(spacing: 16) {
-                    Text("Signed in as \(user.email)").accessibilityIdentifier("signed-in-label")
-                    Button("Sign out") { Task { await session.signOut() } }.accessibilityIdentifier("sign-out-button")
-                }
+                AgendaView(model: AgendaModel(api: session.auth.api), userEmail: user.email) { Task { await session.signOut() } }
             }
         }
         .animation(.default, value: session.state)

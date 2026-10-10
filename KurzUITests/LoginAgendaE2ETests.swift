@@ -3,10 +3,10 @@ import XCTest
 final class LoginE2ETests: XCTestCase {
     static let email = "dev.kurz@gmail.com"
 
-    @MainActor func launch(fresh: Bool = true) -> XCUIApplication {
+    @MainActor func launch() -> XCUIApplication {
         let app = XCUIApplication()
         app.launchEnvironment["KURZ_API_URL"] = ProcessInfo.processInfo.environment["KURZ_API_URL"] ?? "http://localhost:3000"
-        if fresh { app.launchEnvironment["KURZ_FRESH_INSTALL"] = "1" }
+        app.launchEnvironment["KURZ_FRESH_INSTALL"] = "1"
         app.launch()
         return app
     }
@@ -22,10 +22,11 @@ final class LoginE2ETests: XCTestCase {
         field.typeText(code)
     }
 
-    @MainActor func testSignInShowsTheSignedInScreenAndSignOutReturns() {
+    @MainActor func testSignInShowsTheAgendaAndSignOutReturns() {
         let app = launch()
         signIn(app)
-        XCTAssertTrue(app.staticTexts["signed-in-label"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.navigationBars["Agenda"].waitForExistence(timeout: 10))
+        app.buttons["account-menu"].tap()
         app.buttons["sign-out-button"].tap()
         XCTAssertTrue(app.textFields["email-field"].waitForExistence(timeout: 10))
     }
@@ -35,5 +36,16 @@ final class LoginE2ETests: XCTestCase {
         signIn(app, code: "1111111")
         XCTAssertTrue(app.staticTexts["login-error"].waitForExistence(timeout: 10))
         XCTAssertTrue(app.textFields["code-field"].exists)
+    }
+
+    @MainActor func testAgendaListsTheSeededBookings() {
+        let app = launch()
+        signIn(app)
+        XCTAssertTrue(app.staticTexts["Tomorrow"].waitForExistence(timeout: 15) || app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'Tomorrow'")).firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'Ana Silva'")).firstMatch.exists)
+        XCTAssertTrue(app.staticTexts.matching(NSPredicate(format: "label CONTAINS 'Bruno Costa'")).firstMatch.exists)
+        let shot = XCTAttachment(screenshot: app.screenshot())
+        shot.lifetime = .keepAlways
+        add(shot)
     }
 }
