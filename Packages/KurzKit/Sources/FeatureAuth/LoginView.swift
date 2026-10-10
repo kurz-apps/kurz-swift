@@ -78,7 +78,7 @@ public struct LoginView: View {
 
     @ViewBuilder private var credentialsStep: some View {
         field("E-mail", focusOn: .email) {
-            TextField("do.you.know@university.kurz.fyi", text: $email)
+            TextField("E-mail", text: $email, prompt: Text("do.you.know@university.kurz.fyi").foregroundStyle(Color.appPlaceholder))
                 .textContentType(.emailAddress).keyboard(.emailAddress).noAutocapitalization().autocorrectionDisabled()
                 .focused($focus, equals: .email).submitLabel(emailReady ? .next : .done).onSubmit { if emailReady { focus = .password } }
                 .accessibilityIdentifier("email-field")
@@ -102,7 +102,7 @@ public struct LoginView: View {
 
     @ViewBuilder private var codeStep: some View {
         field("Code", focusOn: .code) {
-            TextField("0000000", text: $code)
+            TextField("Code", text: $code, prompt: Text("0000000").foregroundStyle(Color.appPlaceholder))
                 .textContentType(.oneTimeCode).keyboard(.numberPad)
                 .focused($focus, equals: .code).accessibilityIdentifier("code-field")
                 .onChange(of: code) { _, new in if new.count >= Self.codeLength { Task { await verifyCode() } } }
