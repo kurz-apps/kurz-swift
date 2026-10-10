@@ -1,4 +1,5 @@
 import Auth
+import DesignSystem
 import Domain
 import FeatureAgenda
 import FeatureAuth
@@ -25,6 +26,7 @@ struct ContentView: View {
                 RootView(model: AgendaModel(api: session.auth.api), userEmail: user.email) { Task { await session.signOut() } }
             }
         }
+        .tint(Color.appPrimary)
         .animation(.default, value: session.state)
         .task { await session.restore() }
     }

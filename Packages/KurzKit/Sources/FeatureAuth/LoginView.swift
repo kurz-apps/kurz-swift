@@ -78,7 +78,8 @@ public struct LoginView: View {
 
     @ViewBuilder private var credentialsStep: some View {
         field("E-mail", focusOn: .email) {
-            TextField("E-mail", text: $email, prompt: Text("do.you.know@university.kurz.fyi").foregroundStyle(Color.appPlaceholder))
+            TextField("E-mail", text: $email, prompt: Text(""))
+                .placeholder("do.you.know@university.kurz.fyi", when: email.isEmpty)
                 .textContentType(.emailAddress).keyboard(.emailAddress).noAutocapitalization().autocorrectionDisabled()
                 .focused($focus, equals: .email).submitLabel(emailReady ? .next : .done).onSubmit { if emailReady { focus = .password } }
                 .accessibilityIdentifier("email-field")
@@ -102,7 +103,8 @@ public struct LoginView: View {
 
     @ViewBuilder private var codeStep: some View {
         field("Code", focusOn: .code) {
-            TextField("Code", text: $code, prompt: Text("0000000").foregroundStyle(Color.appPlaceholder))
+            TextField("Code", text: $code, prompt: Text(""))
+                .placeholder("0000000", when: code.isEmpty)
                 .textContentType(.oneTimeCode).keyboard(.numberPad)
                 .focused($focus, equals: .code).accessibilityIdentifier("code-field")
                 .onChange(of: code) { _, new in if new.count >= Self.codeLength { Task { await verifyCode() } } }
@@ -198,3 +200,11 @@ private extension View {
 }
 
 private enum KeyboardKind { case numberPad, emailAddress }
+
+private extension View {
+    func placeholder(_ text: LocalizedStringKey, when isEmpty: Bool) -> some View {
+        overlay(alignment: .leading) {
+            if isEmpty { Text(text).foregroundStyle(Color.appPlaceholder).allowsHitTesting(false).accessibilityHidden(true) }
+        }
+    }
+}
