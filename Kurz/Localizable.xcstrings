@@ -1,10 +1,8 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "—" : {
-
-    },
     "%@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -15,6 +13,7 @@
       }
     },
     "%@: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -25,6 +24,7 @@
       }
     },
     "Account" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -35,6 +35,7 @@
       }
     },
     "Apple Intelligence doesn't support your language yet." : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -50,7 +51,30 @@
     "Check your connection and try again." : {
 
     },
+    "Check your e-mail" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verifique o seu e-mail"
+          }
+        }
+      }
+    },
+    "Code" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Código"
+          }
+        }
+      }
+    },
     "Couldn't load your schedule" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -60,7 +84,74 @@
         }
       }
     },
+    "Couldn't send the code. Check the e-mail and try again." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível enviar o código. Verifique o e-mail e tente novamente."
+          }
+        }
+      }
+    },
+    "Create account" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Criar conta"
+          }
+        }
+      }
+    },
+    "Don't have an account yet?" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ainda não tem conta?"
+          }
+        }
+      }
+    },
+    "E-mail" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mail"
+          }
+        }
+      }
+    },
+    "E-mail me a code" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviar-me um código por e-mail"
+          }
+        }
+      }
+    },
+    "Forgot your password?" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esqueceu-se da palavra-passe?"
+          }
+        }
+      }
+    },
     "Generated on device with Apple Intelligence" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -71,6 +162,7 @@
       }
     },
     "HTTP error" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -81,6 +173,7 @@
       }
     },
     "Invalid MCP response" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -91,6 +184,7 @@
       }
     },
     "Invalid token response" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -101,6 +195,7 @@
       }
     },
     "Login refused: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -111,6 +206,7 @@
       }
     },
     "Login rejected: invalid response" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -121,6 +217,7 @@
       }
     },
     "Login rejected: unexpected issuer (%@)" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -131,6 +228,7 @@
       }
     },
     "MCP error" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -141,6 +239,7 @@
       }
     },
     "MCP replied with HTTP %lld" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -151,6 +250,7 @@
       }
     },
     "MCP response had no result" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -161,6 +261,7 @@
       }
     },
     "missing" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -171,6 +272,7 @@
       }
     },
     "No registered client" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -181,6 +283,7 @@
       }
     },
     "No schedule tool on the server. Available tools: %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -191,6 +294,7 @@
       }
     },
     "Nothing scheduled" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -201,6 +305,7 @@
       }
     },
     "Now" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -210,7 +315,19 @@
         }
       }
     },
+    "Password" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Palavra-passe"
+          }
+        }
+      }
+    },
     "Refresh" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -221,6 +338,7 @@
       }
     },
     "Registration returned no client_id" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -231,11 +349,34 @@
       }
     },
     "Schedule" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Agenda"
+          }
+        }
+      }
+    },
+    "Sign in" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrar"
+          }
+        }
+      }
+    },
+    "Sign in to Kurz" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrar no Kurz"
           }
         }
       }
@@ -263,6 +404,7 @@
       }
     },
     "Sign out" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -272,10 +414,8 @@
         }
       }
     },
-    "Signed in as %@" : {
-
-    },
     "Summary" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -285,7 +425,19 @@
         }
       }
     },
+    "That code is wrong or expired." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Esse código está errado ou expirou."
+          }
+        }
+      }
+    },
     "The model is still downloading. Try again in a few minutes." : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -296,6 +448,7 @@
       }
     },
     "This device doesn't support Apple Intelligence." : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -306,6 +459,7 @@
       }
     },
     "Today" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -316,6 +470,7 @@
       }
     },
     "Tomorrow" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -336,6 +491,7 @@
       }
     },
     "Turn on Apple Intelligence in Settings." : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -346,6 +502,7 @@
       }
     },
     "Undated" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
@@ -356,11 +513,56 @@
       }
     },
     "Updated at %@" : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Atualizado às %@"
+          }
+        }
+      }
+    },
+    "Use another e-mail" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Usar outro e-mail"
+          }
+        }
+      }
+    },
+    "Verify and sign in" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verificar e entrar"
+          }
+        }
+      }
+    },
+    "We sent a 7-digit code to %@" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enviámos um código de 7 dígitos para %@"
+          }
+        }
+      }
+    },
+    "Wrong e-mail or password." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "E-mail ou palavra-passe errados."
           }
         }
       }
@@ -377,6 +579,7 @@
       }
     },
     "Your next 7 days are free." : {
+      "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {

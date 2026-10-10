@@ -23,6 +23,10 @@ public final class SessionStore {
         state = .signedIn(try await auth.verify(email: email, code: code))
     }
 
+    public func signIn(email: String, password: String) async throws {
+        state = .signedIn(try await auth.signIn(email: email, password: password))
+    }
+
     public func signOut() async {
         await auth.signOut()
         state = .signedOut
