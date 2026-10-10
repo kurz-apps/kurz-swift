@@ -60,7 +60,35 @@ private var unlimited: AgendaSession { AgendaResponse.preview.sessions.first { $
     agenda { $0.query = "zzz" }
 }
 
-#Preview("Filters · only pending") {
+#Preview("Search · no results · filters on") {
+    agenda { $0.query = "zzz"; $0.onlyPending = true }.environment(\.horizontalSizeClass, .compact)
+}
+
+#Preview("Refreshing · iPad", traits: .landscapeLeft) {
+    agenda(.refreshing).environment(\.horizontalSizeClass, .regular)
+}
+
+#Preview("Refreshing · next week skeleton · iPad", traits: .landscapeLeft) {
+    agenda(.refreshing) { $0.show(.now.addingTimeInterval(14 * 86_400)) }.environment(\.horizontalSizeClass, .regular)
+}
+
+#Preview("Refreshing · next week · iPhone") {
+    agenda(.refreshing) { $0.show(.now.addingTimeInterval(14 * 86_400)) }.environment(\.horizontalSizeClass, .compact)
+}
+
+#Preview("Refresh failed · banner · iPad", traits: .landscapeLeft) {
+    agenda(.refreshFailing).environment(\.horizontalSizeClass, .regular)
+}
+
+#Preview("Refresh failed · banner · iPhone · dark") {
+    agenda(.refreshFailing).environment(\.horizontalSizeClass, .compact).preferredColorScheme(.dark)
+}
+
+#Preview("Other time zone · iPad", traits: .landscapeLeft) {
+    agenda(.otherTimeZone).environment(\.horizontalSizeClass, .regular)
+}
+
+#Preview("Filters · only pending · active cue") {
     agenda { $0.onlyPending = true }.environment(\.horizontalSizeClass, .compact)
 }
 

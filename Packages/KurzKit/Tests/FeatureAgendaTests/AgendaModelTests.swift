@@ -26,6 +26,26 @@ private func session(_ date: String, hour: Int, form: Int = 1, category: String?
     return model
 }
 
+@MainActor private final class Probe {
+    weak var model: AgendaModel?
+    var refreshing = false
+    var stale = false
+    var shownDays: [String] = []
+
+    func capture() {
+        guard let model else { return }
+        refreshing = model.isRefreshing
+        stale = model.isStale
+        shownDays = model.days.map(\.date)
+    }
+}
+
+private func zoned(_ identifier: String) -> Calendar {
+    var calendar = utcMondayCalendar
+    calendar.timeZone = TimeZone(identifier: identifier)!
+    return calendar
+}
+
 @Suite @MainActor struct AgendaModelTests {
     @Test func weekIsTheCalendarWeekAndDayIsTheAnchor() {
         let model = AgendaModel(calendar: utcMondayCalendar, today: saturday) { _, _ in AgendaResponse(timeZone: "UTC", sessions: []) }
@@ -111,6 +131,109 @@ private func session(_ date: String, hour: Int, form: Int = 1, category: String?
         let model = AgendaModel { _, _ in throw Boom() }
         await model.refresh()
         if case .failed = model.phase {} else { Issue.record("expected failed") }
+    }
+
+    @Test func aFailedRefreshKeepsTheLoadedAgendaAndRaisesABanner() async {
+        struct Boom: Error {}
+        let calls = Mutex(0)
+        let model = AgendaModel(calendar: utcMondayCalendar, today: saturday) { _, _ in
+            let call = calls.withLock { $0 += 1; return $0 }
+            if call > 1 { throw Boom() }
+            return AgendaResponse(timeZone: "UTC", sessions: [session("2026-10-06", hour: 9)])
+        }
+        await model.refresh()
+        await model.refresh()
+        #expect(model.days.map(\.date) == ["2026-10-06"])
+        #expect(model.refreshError != nil)
+        #expect(model.isRefreshing == false)
+        if case .loaded = model.phase {} else { Issue.record("expected the loaded agenda to stay") }
+    }
+
+    @Test func aSuccessfulRefreshClearsTheBanner() async {
+        let model = await loadedModel([session("2026-10-06", hour: 9)])
+        model.refreshError = "x"
+        await model.refresh()
+        #expect(model.refreshError == nil)
+    }
+
+    @Test func changingTheRangeKeepsThePreviousContentWhileLoading() async {
+        let probe = Probe()
+        let model = AgendaModel(calendar: utcMondayCalendar, today: saturday) { from, _ in
+            if from == "2026-10-12" { await probe.capture() }
+            return AgendaResponse(timeZone: "UTC", sessions: from == "2026-10-12" ? [] : [session("2026-10-06", hour: 9)])
+        }
+        probe.model = model
+        await model.refresh()
+        model.next()
+        #expect(model.isStale)
+        await model.refresh()
+        #expect(probe.refreshing)
+        #expect(probe.stale)
+        #expect(probe.shownDays == ["2026-10-06"])
+        #expect(model.isStale == false)
+        #expect(model.isRefreshing == false)
+        #expect(model.days.isEmpty)
+    }
+
+    @Test func narrowingToADayInsideTheLoadedWeekIsNotStale() async {
+        let model = await loadedModel([session("2026-10-06", hour: 9)])
+        model.show(saturday.addingTimeInterval(-4 * 86_400), period: .day)
+        #expect(model.isStale == false)
+        #expect(model.days.map(\.date) == ["2026-10-06"])
+    }
+
+    @Test func theAgendaTimeZoneDrivesDayKeysAndToday() async {
+        let model = AgendaModel(calendar: utcMondayCalendar, today: saturday) { _, _ in AgendaResponse(timeZone: "Pacific/Auckland", sessions: []) }
+        await model.refresh()
+        #expect(model.calendar.timeZone.identifier == "Pacific/Auckland")
+        #expect(model.key(model.anchor) == "2026-10-10")
+        #expect(model.range == ("2026-10-05", "2026-10-12"))
+        let lateSaturdayUTC = saturday.addingTimeInterval(23.5 * 3600)
+        let sunday = model.dates[6]
+        #expect(model.key(sunday) == "2026-10-11")
+        #expect(model.isToday(sunday, now: lateSaturdayUTC))
+        #expect(model.isToday(model.dates[5], now: lateSaturdayUTC) == false)
+        #expect(model.dayTitle("2026-10-11", now: lateSaturdayUTC).hasPrefix(String(localized: "Today")))
+        #expect(model.dayTitle("2026-10-12", now: lateSaturdayUTC).hasPrefix(String(localized: "Tomorrow")))
+        #expect(model.dayTitle("2026-10-12", now: lateSaturdayUTC).contains("12"))
+        model.goToToday(lateSaturdayUTC)
+        #expect(model.key(model.anchor) == "2026-10-11")
+    }
+
+    @Test func dayTitlesWestOfUTCKeepTheirDate() async {
+        let model = AgendaModel(calendar: zoned("America/Sao_Paulo"), today: saturday) { _, _ in AgendaResponse(timeZone: "America/Sao_Paulo", sessions: []) }
+        let title = model.dayTitle("2026-10-14", now: saturday.addingTimeInterval(12 * 3600))
+        #expect(title.contains("14"))
+        #expect(!title.hasPrefix(String(localized: "Today")))
+    }
+
+    @Test func theTimeZoneNoteAppearsOnlyWhenTheDeviceZoneDiffers() async {
+        let model = AgendaModel(calendar: zoned("Europe/Lisbon"), today: saturday) { _, _ in AgendaResponse(timeZone: "Europe/Lisbon", sessions: []) }
+        #expect(model.timeZoneNote(device: TimeZone(identifier: "Asia/Tokyo")!) == nil)
+        await model.refresh()
+        #expect(model.timeZoneNote(device: TimeZone(identifier: "Europe/Lisbon")!) == nil)
+        #expect(model.timeZoneNote(device: TimeZone(identifier: "Asia/Tokyo")!) != nil)
+        let utc = await loadedModel([])
+        #expect(utc.timeZoneNote(device: TimeZone(identifier: "Europe/Lisbon")!)?.contains("GMT") == true)
+    }
+
+    @Test func activeFiltersCountHiddenSessionsAndClearInOneStep() async {
+        let model = await loadedModel([
+            session("2026-10-06", hour: 9, form: 1, category: "spa"),
+            session("2026-10-06", hour: 10, form: 2, category: "spa", status: "pending"),
+            session("2026-10-07", hour: 9, form: 2),
+        ])
+        #expect(model.isFiltering == false)
+        #expect(model.hiddenByFilters == 0)
+        model.hiddenCategories = ["spa"]
+        model.onlyPending = true
+        #expect(model.isFiltering)
+        #expect(model.hiddenByFilters == 3)
+        model.query = "nobody"
+        #expect(model.hiddenByFilters == 0)
+        model.clearFilters()
+        #expect(model.isFiltering == false)
+        #expect(model.hiddenCategories.isEmpty && model.hiddenForms.isEmpty && model.onlyPending == false)
     }
 
     @Test func occupancyFollowsCapacity() {
