@@ -89,15 +89,11 @@ public struct LoginView: View {
         }
         .buttonStyle(OutlineButtonStyle()).disabled(isLoading)
         .accessibilityIdentifier("google-button")
-        HStack(spacing: 12) {
-            Rectangle().fill(Color.appBorder).frame(height: 1)
-            Text("or").font(.footnote).foregroundStyle(Color.appMutedForeground).accessibilityIdentifier("login-divider")
-            Rectangle().fill(Color.appBorder).frame(height: 1)
-        }
+        LabeledDivider("or", titleIdentifier: "login-divider")
     }
 
     @ViewBuilder private var credentialsStep: some View {
-        field("E-mail", focusOn: .email) {
+        FormField("E-mail", isFocused: focus == .email) {
             TextField("E-mail", text: $email, prompt: Text(""))
                 .placeholder("do.you.know@university.kurz.fyi", when: email.isEmpty)
                 .textContentType(.emailAddress).keyboard(.emailAddress).noAutocapitalization().autocorrectionDisabled()
@@ -105,7 +101,7 @@ public struct LoginView: View {
                 .accessibilityIdentifier("email-field")
         }
         if emailReady {
-            field("Password", focusOn: .password, trailing: { Link("Forgot your password?", destination: Self.webURL.appending(path: "password/forgot")).font(.footnote.weight(.semibold)).foregroundStyle(Color.appForeground) }) {
+            FormField("Password", isFocused: focus == .password, trailing: { Link("Forgot your password?", destination: Self.webURL.appending(path: "password/forgot")).font(.footnote.weight(.semibold)).foregroundStyle(Color.appForeground) }) {
                 SecureField("", text: $password)
                     .textContentType(.password)
                     .focused($focus, equals: .password).submitLabel(.go).onSubmit { Task { await signInWithPassword() } }
@@ -117,12 +113,12 @@ public struct LoginView: View {
             .buttonStyle(PrimaryButtonStyle()).disabled(isLoading || !emailReady || password.isEmpty)
             .accessibilityIdentifier("login-button")
         Button { requestCode() } label: { Label("E-mail me a code", systemImage: "envelope").fontWeight(.medium) }
-            .buttonStyle(.plain).font(.subheadline).foregroundStyle(Color.appPrimary).opacity(isLoading ? 0.45 : 1).disabled(isLoading)
+            .buttonStyle(TextButtonStyle()).disabled(isLoading)
             .accessibilityIdentifier("send-code-button")
     }
 
     @ViewBuilder private var codeStep: some View {
-        field("Code", focusOn: .code) {
+        FormField("Code", isFocused: focus == .code) {
             TextField("Code", text: $code, prompt: Text(""))
                 .placeholder("0000000", when: code.isEmpty)
                 .textContentType(.oneTimeCode).keyboard(.numberPad)
@@ -133,9 +129,9 @@ public struct LoginView: View {
             .buttonStyle(PrimaryButtonStyle()).disabled(isLoading || code.count < Self.codeLength)
             .accessibilityIdentifier("verify-button")
         Button("Resend code") { Task { await sendCode() } }
-            .buttonStyle(.plain).font(.subheadline).foregroundStyle(Color.appPrimary).opacity(isLoading ? 0.45 : 1).disabled(isLoading)
+            .buttonStyle(TextButtonStyle()).disabled(isLoading)
         Button("Use another e-mail") { codeSent = false; code = ""; error = nil }
-            .buttonStyle(.plain).font(.subheadline).foregroundStyle(Color.appPrimary)
+            .buttonStyle(TextButtonStyle())
     }
 
     private var emailReady: Bool { normalizedEmail.wholeMatch(of: /[^\s@]+@[^\s@]+\.[^\s@]+/) != nil }
@@ -143,17 +139,6 @@ public struct LoginView: View {
 
     private func label(_ title: LocalizedStringKey) -> some View {
         Group { if isLoading && !isGoogleLoading { Text("Signing in…").fontWeight(.semibold) } else { Text(title).fontWeight(.semibold) } }.frame(maxWidth: .infinity)
-    }
-
-    private func field<Content: View>(_ title: LocalizedStringKey, focusOn: Field, @ViewBuilder trailing: () -> some View = { EmptyView() }, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack { Text(title).font(.subheadline.weight(.medium)).foregroundStyle(Color.appForeground); Spacer(minLength: 8); trailing() }
-            content()
-                .textFieldStyle(.plain).foregroundStyle(Color.appForeground).tint(Color.appPrimary)
-                .padding(12).background(Color.appBackground, in: RoundedRectangle(cornerRadius: 10))
-                .overlay(RoundedRectangle(cornerRadius: 10).stroke(focus == focusOn ? Color.appRing : Color.appBorder, lineWidth: 1))
-                .background { if focus == focusOn { RoundedRectangle(cornerRadius: 10).stroke(Color.appRing.opacity(0.3), lineWidth: 6) } }
-        }
     }
 
     private func perform(_ describe: @escaping (Error) -> LocalizedStringKey?, _ work: () async throws -> Void) async {
@@ -240,14 +225,6 @@ private extension View {
 }
 
 private enum KeyboardKind { case numberPad, emailAddress }
-
-private extension View {
-    func placeholder(_ text: String, when isEmpty: Bool) -> some View {
-        overlay(alignment: .leading) {
-            if isEmpty { Text(verbatim: text).foregroundStyle(Color.appPlaceholder).allowsHitTesting(false).accessibilityHidden(true) }
-        }
-    }
-}
 
 private struct GoogleMark: View {
     var body: some View {
