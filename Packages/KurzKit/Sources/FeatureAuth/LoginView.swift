@@ -202,9 +202,9 @@ private extension View {
 private enum KeyboardKind { case numberPad, emailAddress }
 
 private extension View {
-    func placeholder(_ text: LocalizedStringKey, when isEmpty: Bool) -> some View {
+    func placeholder(_ text: String, when isEmpty: Bool) -> some View {
         overlay(alignment: .leading) {
-            if isEmpty { Text(text).foregroundStyle(Color.appPlaceholder).allowsHitTesting(false).accessibilityHidden(true) }
+            if isEmpty { Text(verbatim: text).foregroundStyle(Color.appPlaceholder).allowsHitTesting(false).accessibilityHidden(true) }
         }
     }
 }
