@@ -2,6 +2,7 @@ import Auth
 import Domain
 import FeatureAgenda
 import FeatureAuth
+import FeatureShell
 import SwiftUI
 
 struct ContentView: View {
@@ -21,7 +22,7 @@ struct ContentView: View {
                     Button("Try again") { Task { await session.restore() } }.buttonStyle(.borderedProminent)
                 }
             case .signedIn(let user):
-                AgendaView(model: AgendaModel(api: session.auth.api), userEmail: user.email) { Task { await session.signOut() } }
+                RootView(model: AgendaModel(api: session.auth.api), userEmail: user.email) { Task { await session.signOut() } }
             }
         }
         .animation(.default, value: session.state)

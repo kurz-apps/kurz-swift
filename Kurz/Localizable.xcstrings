@@ -45,12 +45,8 @@
         }
       }
     },
-    "Can't reach Kurz" : {
-
-    },
-    "Check your connection and try again." : {
-
-    },
+    "Can't reach Kurz" : {},
+    "Check your connection and try again." : {},
     "Check your e-mail" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -585,6 +581,36 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seus próximos 7 dias estão livres."
+          }
+        }
+      }
+    },
+    "Pending approval" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aguardando aprovação"
+          }
+        }
+      }
+    },
+    "No pending approvals" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem aprovações pendentes"
+          }
+        }
+      }
+    },
+    "Nothing is waiting for your approval." : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada aguarda a sua aprovação."
           }
         }
       }
