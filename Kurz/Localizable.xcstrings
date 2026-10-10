@@ -84,17 +84,6 @@
         }
       }
     },
-    "Couldn't send the code. Check the e-mail and try again." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Não foi possível enviar o código. Verifique o e-mail e tente novamente."
-          }
-        }
-      }
-    },
     "Create account" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -135,6 +124,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enviar-me um código por e-mail"
+          }
+        }
+      }
+    },
+    "Enter your e-mail first, then we send you a code." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Introduza primeiro o seu e-mail e depois enviamos-lhe um código."
           }
         }
       }
@@ -190,6 +190,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resposta de token inválida"
+          }
+        }
+      }
+    },
+    "Kurz has sent all the e-mails it can for now. Please try again later." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Kurz já enviou todos os e-mails que podia por agora. Tente novamente mais tarde."
           }
         }
       }
@@ -260,13 +271,13 @@
         }
       }
     },
-    "missing" : {
+    "New sign-ups are paused for today. If you already have an account, you can still sign in." : {
       "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ausente"
+            "value" : "As novas inscrições estão suspensas por hoje. Se já tem conta, pode continuar a entrar."
           }
         }
       }
@@ -348,6 +359,17 @@
         }
       }
     },
+    "Resend code" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reenviar código"
+          }
+        }
+      }
+    },
     "Schedule" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -414,6 +436,28 @@
         }
       }
     },
+    "Signing in…" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A entrar…"
+          }
+        }
+      }
+    },
+    "Something went wrong, please try again later." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Algo correu mal, tente novamente mais tarde."
+          }
+        }
+      }
+    },
     "Summary" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -425,13 +469,24 @@
         }
       }
     },
-    "That code is wrong or expired." : {
+    "That code is wrong or expired. Request a new one if needed." : {
       "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Esse código está errado ou expirou."
+            "value" : "Esse código está errado ou expirou. Peça um novo, se necessário."
+          }
+        }
+      }
+    },
+    "That doesn't look like a valid e-mail address." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isso não parece um endereço de e-mail válido."
           }
         }
       }
@@ -476,6 +531,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Amanhã"
+          }
+        }
+      }
+    },
+    "Too many attempts. Please wait a few minutes and try again." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Demasiadas tentativas. Aguarde alguns minutos e tente novamente."
           }
         }
       }
@@ -545,6 +611,17 @@
         }
       }
     },
+    "We can't send e-mails to that address. Temporary and disposable addresses aren't accepted." : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não conseguimos enviar e-mails para esse endereço. Endereços temporários e descartáveis não são aceites."
+          }
+        }
+      }
+    },
     "We sent a 7-digit code to %@" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -556,13 +633,13 @@
         }
       }
     },
-    "Wrong e-mail or password." : {
+    "Wrong e-mail or password. Too many attempts pause password sign-in for a while." : {
       "extractionState" : "stale",
       "localizations" : {
         "pt" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "E-mail ou palavra-passe errados."
+            "value" : "E-mail ou palavra-passe errados. Demasiadas tentativas suspendem o acesso por palavra-passe durante algum tempo."
           }
         }
       }
@@ -585,6 +662,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seus próximos 7 dias estão livres."
+          }
+        }
+      }
+    },
+    "missing" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ausente"
           }
         }
       }
