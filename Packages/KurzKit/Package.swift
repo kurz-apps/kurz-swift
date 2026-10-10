@@ -11,6 +11,7 @@ let package = Package(
         .library(name: "Auth", targets: ["Auth"]),
         .library(name: "FeatureAuth", targets: ["FeatureAuth"]),
         .library(name: "FeatureAgenda", targets: ["FeatureAgenda"]),
+        .library(name: "FeatureShell", targets: ["FeatureShell"]),
     ],
     targets: [
         .target(name: "Domain"),
@@ -19,6 +20,8 @@ let package = Package(
         .target(name: "DesignSystem"),
         .target(name: "FeatureAuth", dependencies: ["Auth", "DesignSystem"]),
         .target(name: "FeatureAgenda", dependencies: ["Domain", "Networking", "DesignSystem"]),
+        .target(name: "FeatureShell", dependencies: ["Domain", "DesignSystem", "FeatureAgenda"]),
+        .testTarget(name: "FeatureShellTests", dependencies: ["FeatureShell", "Domain"]),
         .testTarget(name: "FeatureAgendaTests", dependencies: ["FeatureAgenda", "Domain", "DesignSystem"]),
         .testTarget(name: "AuthTests", dependencies: ["Auth", "Networking", "Domain"]),
         .testTarget(name: "DomainTests", dependencies: ["Domain"]),

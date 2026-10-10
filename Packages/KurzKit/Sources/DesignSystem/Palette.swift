@@ -45,6 +45,8 @@ private extension UIColor {
 #endif
 
 public struct PrimaryButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
     public init() {}
 
     public func makeBody(configuration: Configuration) -> some View {
@@ -54,5 +56,6 @@ public struct PrimaryButtonStyle: ButtonStyle {
             .padding(.vertical, 14)
             .foregroundStyle(Color.appPrimaryForeground)
             .background(Color.appPrimary.opacity(configuration.isPressed ? 0.85 : 1), in: RoundedRectangle(cornerRadius: 12))
+            .opacity(isEnabled ? 1 : 0.45)
     }
 }

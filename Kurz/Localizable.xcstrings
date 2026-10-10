@@ -1,61 +1,774 @@
 {
-  "sourceLanguage" : "en",
-  "strings" : {
-    "%@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@"
+  "sourceLanguage": "en",
+  "strings": {
+    "%@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@"
           }
         }
       }
     },
-    "%@: %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@: %@"
+    "%@: %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@: %@"
           }
         }
       }
     },
-    "%lld booked" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld booked"
+    "Account": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conta"
+          }
+        }
+      }
+    },
+    "Apple Intelligence doesn't support your language yet.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A Apple Intelligence ainda não suporta o seu idioma."
+          }
+        }
+      }
+    },
+    "Can't reach Kurz": {},
+    "Check your connection and try again.": {},
+    "Check your e-mail": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verifique o seu e-mail"
+          }
+        }
+      }
+    },
+    "Code": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Código"
+          }
+        }
+      }
+    },
+    "Couldn't load your schedule": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível carregar a agenda"
+          }
+        }
+      }
+    },
+    "Couldn't send the code. Check the e-mail and try again.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível enviar o código. Verifique o e-mail e tente novamente."
+          }
+        }
+      }
+    },
+    "Create account": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Criar conta"
+          }
+        }
+      }
+    },
+    "Don't have an account yet?": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ainda não tem conta?"
+          }
+        }
+      }
+    },
+    "E-mail": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-mail"
+          }
+        }
+      }
+    },
+    "E-mail me a code": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviar-me um código por e-mail"
+          }
+        }
+      }
+    },
+    "Forgot your password?": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esqueceu-se da palavra-passe?"
+          }
+        }
+      }
+    },
+    "Generated on device with Apple Intelligence": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gerado no aparelho com Apple Intelligence"
+          }
+        }
+      }
+    },
+    "HTTP error": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "erro HTTP"
+          }
+        }
+      }
+    },
+    "Invalid MCP response": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resposta MCP inválida"
+          }
+        }
+      }
+    },
+    "Invalid token response": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resposta de token inválida"
+          }
+        }
+      }
+    },
+    "Login refused: %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Login recusado: %@"
+          }
+        }
+      }
+    },
+    "Login rejected: invalid response": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Login rejeitado: resposta inválida"
+          }
+        }
+      }
+    },
+    "Login rejected: unexpected issuer (%@)": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Login rejeitado: emissor inesperado (%@)"
+          }
+        }
+      }
+    },
+    "MCP error": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Erro MCP"
+          }
+        }
+      }
+    },
+    "MCP replied with HTTP %lld": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MCP respondeu HTTP %lld"
+          }
+        }
+      }
+    },
+    "MCP response had no result": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resposta MCP sem resultado"
+          }
+        }
+      }
+    },
+    "missing": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ausente"
+          }
+        }
+      }
+    },
+    "No registered client": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem cliente registrado"
+          }
+        }
+      }
+    },
+    "No schedule tool on the server. Available tools: %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhuma tool de agenda no servidor. Tools disponíveis: %@"
+          }
+        }
+      }
+    },
+    "Nothing scheduled": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nada agendado"
+          }
+        }
+      }
+    },
+    "Now": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agora"
+          }
+        }
+      }
+    },
+    "Password": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Palavra-passe"
+          }
+        }
+      }
+    },
+    "Refresh": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atualizar"
+          }
+        }
+      }
+    },
+    "Registration returned no client_id": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O registro não devolveu client_id"
+          }
+        }
+      }
+    },
+    "Schedule": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agenda"
+          }
+        }
+      }
+    },
+    "Sign in": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entrar"
+          }
+        }
+      }
+    },
+    "Sign in to Kurz": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entrar no Kurz"
+          }
+        }
+      }
+    },
+    "Sign in to see your appointments. Access is read-only and the summary is generated on your device with Apple Intelligence.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entre para ver seus compromissos. O acesso é somente leitura e o resumo é feito no próprio aparelho com Apple Intelligence."
+          }
+        }
+      }
+    },
+    "Sign in with Kurz": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entrar com Kurz"
+          }
+        }
+      }
+    },
+    "Sign out": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sair"
+          }
+        }
+      }
+    },
+    "Summary": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Resumo"
+          }
+        }
+      }
+    },
+    "That code is wrong or expired.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esse código está errado ou expirou."
+          }
+        }
+      }
+    },
+    "The model is still downloading. Try again in a few minutes.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O modelo ainda está sendo baixado. Tente em alguns minutos."
+          }
+        }
+      }
+    },
+    "This device doesn't support Apple Intelligence.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este aparelho não suporta Apple Intelligence."
+          }
+        }
+      }
+    },
+    "Today": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoje"
+          }
+        }
+      }
+    },
+    "Tomorrow": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Amanhã"
+          }
+        }
+      }
+    },
+    "Try again": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tentar de novo"
+          }
+        }
+      }
+    },
+    "Turn on Apple Intelligence in Settings.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ative a Apple Intelligence em Ajustes."
+          }
+        }
+      }
+    },
+    "Undated": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem data"
+          }
+        }
+      }
+    },
+    "Updated at %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Atualizado às %@"
+          }
+        }
+      }
+    },
+    "Use another e-mail": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Usar outro e-mail"
+          }
+        }
+      }
+    },
+    "Verify and sign in": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verificar e entrar"
+          }
+        }
+      }
+    },
+    "We sent a 7-digit code to %@": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enviámos um código de 7 dígitos para %@"
+          }
+        }
+      }
+    },
+    "Wrong e-mail or password.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-mail ou palavra-passe errados."
+          }
+        }
+      }
+    },
+    "Your Kurz schedule": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sua agenda do Kurz"
+          }
+        }
+      }
+    },
+    "Your next 7 days are free.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seus próximos 7 dias estão livres."
+          }
+        }
+      }
+    },
+    "Pending approval": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aguardando aprovação"
+          }
+        }
+      }
+    },
+    "No pending approvals": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem aprovações pendentes"
+          }
+        }
+      }
+    },
+    "Nothing is waiting for your approval.": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nada aguarda a sua aprovação."
+          }
+        }
+      }
+    },
+    "Enter your e-mail first, then we send you a code.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Introduza primeiro o seu e-mail e depois enviamos-lhe um código."
+          }
+        }
+      }
+    },
+    "Kurz has sent all the e-mails it can for now. Please try again later.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "O Kurz já enviou todos os e-mails que podia por agora. Tente novamente mais tarde."
+          }
+        }
+      }
+    },
+    "New sign-ups are paused for today. If you already have an account, you can still sign in.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "As novas inscrições estão suspensas por hoje. Se já tem conta, pode continuar a entrar."
+          }
+        }
+      }
+    },
+    "Resend code": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reenviar código"
+          }
+        }
+      }
+    },
+    "Signing in…": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A entrar…"
+          }
+        }
+      }
+    },
+    "Something went wrong, please try again later.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Algo correu mal, tente novamente mais tarde."
+          }
+        }
+      }
+    },
+    "That code is wrong or expired. Request a new one if needed.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esse código está errado ou expirou. Peça um novo, se necessário."
+          }
+        }
+      }
+    },
+    "That doesn't look like a valid e-mail address.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Isso não parece um endereço de e-mail válido."
+          }
+        }
+      }
+    },
+    "Too many attempts. Please wait a few minutes and try again.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Demasiadas tentativas. Aguarde alguns minutos e tente novamente."
+          }
+        }
+      }
+    },
+    "We can't send e-mails to that address. Temporary and disposable addresses aren't accepted.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não conseguimos enviar e-mails para esse endereço. Endereços temporários e descartáveis não são aceites."
+          }
+        }
+      }
+    },
+    "Wrong e-mail or password. Too many attempts pause password sign-in for a while.": {
+      "extractionState": "stale",
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "E-mail ou palavra-passe errados. Demasiadas tentativas suspendem o acesso por palavra-passe durante algum tempo."
+          }
+        }
+      }
+    },
+    "%lld booked": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld booked"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld booked"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld booked"
                 }
               }
             }
           }
         },
-        "pt" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld inscrito"
+        "pt": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld inscrito"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld inscritos"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld inscritos"
                 }
               }
             }
@@ -63,79 +776,39 @@
         }
       }
     },
-    "%lld pending" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld pending"
+    "%lld pending": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld pending"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld pending"
-                }
-              }
-            }
-          }
-        },
-        "pt" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld pendente"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld pendentes"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "%lld sessions" : {
-      "localizations" : {
-        "en" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld session"
-                }
-              },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld sessions"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld pending"
                 }
               }
             }
           }
         },
-        "pt" : {
-          "variations" : {
-            "plural" : {
-              "one" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld sessão"
+        "pt": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld pendente"
                 }
               },
-              "other" : {
-                "stringUnit" : {
-                  "state" : "translated",
-                  "value" : "%lld sessões"
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld pendentes"
                 }
               }
             }
@@ -143,862 +816,336 @@
         }
       }
     },
-    "Account" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Conta"
+    "%lld sessions": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld session"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld sessions"
+                }
+              }
+            }
           }
-        }
-      }
-    },
-    "Agenda" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agenda"
-          }
-        }
-      }
-    },
-    "Apple Intelligence doesn't support your language yet." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "A Apple Intelligence ainda não suporta o seu idioma."
-          }
-        }
-      }
-    },
-    "Can't reach Kurz" : {
-
-    },
-    "Categories" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Categorias"
-          }
-        }
-      }
-    },
-    "Category" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Categoria"
-          }
-        }
-      }
-    },
-    "Check your connection and try again." : {
-
-    },
-    "Check your e-mail" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verifique o seu e-mail"
-          }
-        }
-      }
-    },
-    "Clients · %lld" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clientes · %lld"
-          }
-        }
-      }
-    },
-    "Close" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fechar"
-          }
-        }
-      }
-    },
-    "Code" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Código"
-          }
-        }
-      }
-    },
-    "Confirmed" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Confirmada"
-          }
-        }
-      }
-    },
-    "Couldn't load your agenda" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Não foi possível carregar a agenda"
-          }
-        }
-      }
-    },
-    "Couldn't load your agenda. Check your connection and try again." : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Não foi possível carregar a agenda. Verifique a ligação e tente de novo."
-          }
-        }
-      }
-    },
-    "Couldn't load your schedule" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Não foi possível carregar a agenda"
-          }
-        }
-      }
-    },
-    "Couldn't send the code. Check the e-mail and try again." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Não foi possível enviar o código. Verifique o e-mail e tente novamente."
-          }
-        }
-      }
-    },
-    "Create account" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Criar conta"
-          }
-        }
-      }
-    },
-    "Day" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dia"
-          }
-        }
-      }
-    },
-    "Don't have an account yet?" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ainda não tem conta?"
-          }
-        }
-      }
-    },
-    "E-mail" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E-mail"
-          }
-        }
-      }
-    },
-    "E-mail me a code" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enviar-me um código por e-mail"
-          }
-        }
-      }
-    },
-    "Filters" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Filtros"
-          }
-        }
-      }
-    },
-    "Forgot your password?" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esqueceu-se da palavra-passe?"
-          }
-        }
-      }
-    },
-    "Form" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Formulário"
-          }
-        }
-      }
-    },
-    "Forms" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Formulários"
-          }
-        }
-      }
-    },
-    "Free" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Livre"
-          }
-        }
-      }
-    },
-    "Generated on device with Apple Intelligence" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gerado no aparelho com Apple Intelligence"
-          }
-        }
-      }
-    },
-    "Go to date" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ir para data"
-          }
-        }
-      }
-    },
-    "HTTP error" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "erro HTTP"
-          }
-        }
-      }
-    },
-    "Invalid MCP response" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resposta MCP inválida"
-          }
-        }
-      }
-    },
-    "Invalid token response" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resposta de token inválida"
-          }
-        }
-      }
-    },
-    "Login refused: %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Login recusado: %@"
-          }
-        }
-      }
-    },
-    "Login rejected: invalid response" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Login rejeitado: resposta inválida"
-          }
-        }
-      }
-    },
-    "Login rejected: unexpected issuer (%@)" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Login rejeitado: emissor inesperado (%@)"
-          }
-        }
-      }
-    },
-    "MCP error" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Erro MCP"
-          }
-        }
-      }
-    },
-    "MCP replied with HTTP %lld" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "MCP respondeu HTTP %lld"
-          }
-        }
-      }
-    },
-    "MCP response had no result" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resposta MCP sem resultado"
-          }
-        }
-      }
-    },
-    "missing" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ausente"
-          }
-        }
-      }
-    },
-    "Monthly plan" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Plano mensal"
-          }
-        }
-      }
-    },
-    "Next" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seguinte"
-          }
-        }
-      }
-    },
-    "No registered client" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sem cliente registrado"
-          }
-        }
-      }
-    },
-    "No schedule tool on the server. Available tools: %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nenhuma tool de agenda no servidor. Tools disponíveis: %@"
-          }
-        }
-      }
-    },
-    "No sessions" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sem sessões"
-          }
-        }
-      }
-    },
-    "Nothing scheduled" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nada agendado"
-          }
-        }
-      }
-    },
-    "Nothing scheduled for this day." : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nada agendado para este dia."
-          }
-        }
-      }
-    },
-    "Nothing scheduled for this week." : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nada agendado para esta semana."
-          }
-        }
-      }
-    },
-    "Now" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agora"
-          }
-        }
-      }
-    },
-    "Occupancy" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ocupação"
-          }
-        }
-      }
-    },
-    "Only pending" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Só pendentes"
-          }
-        }
-      }
-    },
-    "Password" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Palavra-passe"
-          }
-        }
-      }
-    },
-    "Pending" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pendente"
-          }
-        }
-      }
-    },
-    "Period" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Período"
-          }
-        }
-      }
-    },
-    "Previous" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Anterior"
+        },
+        "pt": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld sessão"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld sessões"
+                }
+              }
+            }
           }
         }
       }
     },
-    "Refresh" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atualizar"
+    "Agenda": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Agenda"
           }
         }
       }
     },
-    "Registration returned no client_id" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O registro não devolveu client_id"
+    "Categories": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Categorias"
           }
         }
       }
     },
-    "Schedule" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Agenda"
+    "Category": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Categoria"
           }
         }
       }
     },
-    "Search session or client" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pesquisar sessão ou cliente"
+    "Clients · %lld": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clientes · %lld"
           }
         }
       }
     },
-    "Show all" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mostrar tudo"
+    "Close": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fechar"
           }
         }
       }
     },
-    "Sign in" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entrar"
+    "Confirmed": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Confirmada"
           }
         }
       }
     },
-    "Sign in to Kurz" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entrar no Kurz"
+    "Couldn't load your agenda": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível carregar a agenda"
           }
         }
       }
     },
-    "Sign in to see your appointments. Access is read-only and the summary is generated on your device with Apple Intelligence." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entre para ver seus compromissos. O acesso é somente leitura e o resumo é feito no próprio aparelho com Apple Intelligence."
+    "Couldn't load your agenda. Check your connection and try again.": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não foi possível carregar a agenda. Verifique a ligação e tente de novo."
           }
         }
       }
     },
-    "Sign in with Kurz" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Entrar com Kurz"
+    "Day": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dia"
           }
         }
       }
     },
-    "Sign out" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sair"
+    "Filters": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Filtros"
           }
         }
       }
     },
-    "Single" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Avulsa"
+    "Form": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formulário"
           }
         }
       }
     },
-    "Summary" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Resumo"
+    "Forms": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Formulários"
           }
         }
       }
     },
-    "That code is wrong or expired." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Esse código está errado ou expirou."
+    "Free": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Livre"
           }
         }
       }
     },
-    "The model is still downloading. Try again in a few minutes." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "O modelo ainda está sendo baixado. Tente em alguns minutos."
+    "Go to date": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ir para data"
           }
         }
       }
     },
-    "This device doesn't support Apple Intelligence." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Este aparelho não suporta Apple Intelligence."
+    "Monthly plan": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Plano mensal"
           }
         }
       }
     },
-    "Today" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hoje"
+    "Next": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seguinte"
           }
         }
       }
     },
-    "Tomorrow" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Amanhã"
+    "No sessions": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sem sessões"
           }
         }
       }
     },
-    "Try again" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tentar de novo"
+    "Nothing scheduled for this day.": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nada agendado para este dia."
           }
         }
       }
     },
-    "Turn on Apple Intelligence in Settings." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ative a Apple Intelligence em Ajustes."
+    "Nothing scheduled for this week.": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nada agendado para esta semana."
           }
         }
       }
     },
-    "Undated" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sem data"
+    "Occupancy": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ocupação"
           }
         }
       }
     },
-    "Unverified" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Não verificada"
+    "Only pending": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Só pendentes"
           }
         }
       }
     },
-    "Updated at %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Atualizado às %@"
+    "Pending": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pendente"
           }
         }
       }
     },
-    "Use another e-mail" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Usar outro e-mail"
+    "Period": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Período"
           }
         }
       }
     },
-    "Verify and sign in" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verificar e entrar"
+    "Previous": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anterior"
           }
         }
       }
     },
-    "We sent a 7-digit code to %@" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Enviámos um código de 7 dígitos para %@"
+    "Search session or client": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pesquisar sessão ou cliente"
           }
         }
       }
     },
-    "Week" : {
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Semana"
+    "Show all": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrar tudo"
           }
         }
       }
     },
-    "Wrong e-mail or password." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "E-mail ou palavra-passe errados."
+    "Single": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avulsa"
           }
         }
       }
     },
-    "Your Kurz schedule" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sua agenda do Kurz"
+    "Unverified": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não verificada"
           }
         }
       }
     },
-    "Your next 7 days are free." : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "pt" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Seus próximos 7 dias estão livres."
+    "Week": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Semana"
           }
         }
       }
     }
   },
-  "version" : "1.0"
+  "version": "1.0"
 }
