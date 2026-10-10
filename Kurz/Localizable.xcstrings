@@ -1,0 +1,379 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "—" : {
+
+    },
+    "%@" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@"
+          }
+        }
+      }
+    },
+    "%@: %@" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@: %@"
+          }
+        }
+      }
+    },
+    "Account" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conta"
+          }
+        }
+      }
+    },
+    "Apple Intelligence doesn't support your language yet." : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Apple Intelligence ainda não suporta o seu idioma."
+          }
+        }
+      }
+    },
+    "Couldn't load your schedule" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível carregar a agenda"
+          }
+        }
+      }
+    },
+    "Generated on device with Apple Intelligence" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gerado no aparelho com Apple Intelligence"
+          }
+        }
+      }
+    },
+    "HTTP error" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "erro HTTP"
+          }
+        }
+      }
+    },
+    "Invalid MCP response" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resposta MCP inválida"
+          }
+        }
+      }
+    },
+    "Invalid token response" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resposta de token inválida"
+          }
+        }
+      }
+    },
+    "Login refused: %@" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Login recusado: %@"
+          }
+        }
+      }
+    },
+    "Login rejected: invalid response" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Login rejeitado: resposta inválida"
+          }
+        }
+      }
+    },
+    "Login rejected: unexpected issuer (%@)" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Login rejeitado: emissor inesperado (%@)"
+          }
+        }
+      }
+    },
+    "MCP error" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erro MCP"
+          }
+        }
+      }
+    },
+    "MCP replied with HTTP %lld" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MCP respondeu HTTP %lld"
+          }
+        }
+      }
+    },
+    "MCP response had no result" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resposta MCP sem resultado"
+          }
+        }
+      }
+    },
+    "missing" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ausente"
+          }
+        }
+      }
+    },
+    "No registered client" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem cliente registrado"
+          }
+        }
+      }
+    },
+    "No schedule tool on the server. Available tools: %@" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhuma tool de agenda no servidor. Tools disponíveis: %@"
+          }
+        }
+      }
+    },
+    "Nothing scheduled" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nada agendado"
+          }
+        }
+      }
+    },
+    "Now" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agora"
+          }
+        }
+      }
+    },
+    "Refresh" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atualizar"
+          }
+        }
+      }
+    },
+    "Registration returned no client_id" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O registro não devolveu client_id"
+          }
+        }
+      }
+    },
+    "Schedule" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Agenda"
+          }
+        }
+      }
+    },
+    "Sign in to see your appointments. Access is read-only and the summary is generated on your device with Apple Intelligence." : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entre para ver seus compromissos. O acesso é somente leitura e o resumo é feito no próprio aparelho com Apple Intelligence."
+          }
+        }
+      }
+    },
+    "Sign in with Kurz" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entrar com Kurz"
+          }
+        }
+      }
+    },
+    "Sign out" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sair"
+          }
+        }
+      }
+    },
+    "Summary" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resumo"
+          }
+        }
+      }
+    },
+    "The model is still downloading. Try again in a few minutes." : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O modelo ainda está sendo baixado. Tente em alguns minutos."
+          }
+        }
+      }
+    },
+    "This device doesn't support Apple Intelligence." : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Este aparelho não suporta Apple Intelligence."
+          }
+        }
+      }
+    },
+    "Today" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoje"
+          }
+        }
+      }
+    },
+    "Tomorrow" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Amanhã"
+          }
+        }
+      }
+    },
+    "Try again" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tentar de novo"
+          }
+        }
+      }
+    },
+    "Turn on Apple Intelligence in Settings." : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ative a Apple Intelligence em Ajustes."
+          }
+        }
+      }
+    },
+    "Undated" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem data"
+          }
+        }
+      }
+    },
+    "Updated at %@" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atualizado às %@"
+          }
+        }
+      }
+    },
+    "Your Kurz schedule" : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua agenda do Kurz"
+          }
+        }
+      }
+    },
+    "Your next 7 days are free." : {
+      "localizations" : {
+        "pt" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seus próximos 7 dias estão livres."
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
