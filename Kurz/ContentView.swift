@@ -9,6 +9,10 @@ import SwiftUI
 struct ContentView: View {
     let session: SessionStore
 
+    private var isSignedIn: Bool {
+        if case .signedIn = session.state { true } else { false }
+    }
+
     var body: some View {
         Group {
             switch session.state {
@@ -27,6 +31,9 @@ struct ContentView: View {
             }
         }
         .tint(Color.appPrimary)
+        #if os(macOS)
+        .background(MacWindowSizing(isSignedIn: isSignedIn))
+        #endif
         .animation(.default, value: session.state)
         .task { await session.restore() }
     }
