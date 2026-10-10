@@ -55,3 +55,29 @@ public struct RootView: View {
         .background(.bar)
     }
 }
+
+#if DEBUG
+#Preview("Root · iPad", traits: .landscapeLeft) {
+    RootView(model: .preview(), userEmail: "ana@kurz.app") {}.environment(\.horizontalSizeClass, .regular)
+}
+
+#Preview("Root · iPad · dark", traits: .landscapeLeft) {
+    RootView(model: .preview(), userEmail: "ana@kurz.app") {}.environment(\.horizontalSizeClass, .regular).preferredColorScheme(.dark)
+}
+
+#Preview("Root · iPhone") {
+    RootView(model: .preview(), userEmail: "ana@kurz.app") {}.environment(\.horizontalSizeClass, .compact)
+}
+
+#Preview("Pending approval") {
+    PendingView(model: .preview())
+}
+
+#Preview("Pending approval · dark") {
+    PendingView(model: .preview()).preferredColorScheme(.dark)
+}
+
+#Preview("Pending approval · empty") {
+    PendingView(model: .preview(.empty))
+}
+#endif
