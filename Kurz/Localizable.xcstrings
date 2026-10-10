@@ -1245,6 +1245,36 @@
           }
         }
       }
+    },
+    "Resend in %llds": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reenviar em %llds"
+          }
+        }
+      }
+    },
+    "Show password": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostrar palavra-passe"
+          }
+        }
+      }
+    },
+    "Hide password": {
+      "localizations": {
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ocultar palavra-passe"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
