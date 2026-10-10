@@ -19,25 +19,23 @@ public struct AgendaView: View {
     private var compact: Bool { sizeClass == .compact }
 
     public var body: some View {
-        NavigationStack {
-            content
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(Color.appBackground)
-                .safeAreaBar(edge: .top) { controls }
-                .navigationTitle("Agenda")
-                .navigationSubtitle(subtitle)
-                .searchable(text: $model.query, prompt: Text("Search session or client"))
-                .refreshable { await model.refresh() }
-                .toolbar { toolbar }
-                .inspector(isPresented: Binding { model.selectedSession != nil } set: { if !$0 { model.selection = nil } }) {
-                    if let selected = model.selectedSession, case .loaded(let agenda) = model.phase {
-                        SessionDetail(session: selected, timeZone: agenda.timeZone) { model.selection = nil }
-                    }
+        content
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.appBackground)
+            .safeAreaBar(edge: .top) { controls }
+            .navigationTitle("Agenda")
+            .navigationSubtitle(subtitle)
+            .searchable(text: $model.query, prompt: Text("Search session or client"))
+            .refreshable { await model.refresh() }
+            .toolbar { toolbar }
+            .inspector(isPresented: Binding { model.selectedSession != nil } set: { if !$0 { model.selection = nil } }) {
+                if let selected = model.selectedSession, case .loaded(let agenda) = model.phase {
+                    SessionDetail(session: selected, timeZone: agenda.timeZone) { model.selection = nil }
                 }
-        }
-        .focusedSceneValue(model)
-        .onChange(of: compact, initial: true) { model.rollingWeek = compact }
-        .task(id: model.range.from + model.range.to) { await model.refresh() }
+            }
+            .focusedSceneValue(model)
+            .onChange(of: compact, initial: true) { model.rollingWeek = compact }
+            .task(id: model.range.from + model.range.to) { await model.refresh() }
     }
 
     private var subtitle: String {
