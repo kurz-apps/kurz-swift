@@ -6,13 +6,17 @@ import SwiftUI
 
 public struct LoginView: View {
     let session: SessionStore
-    @State private var email = ""
-    @State private var password = ""
+    @State private var email: String
+    @State private var password: String
     @State private var code = ""
-    @State private var codeSent = false
+    @State private var codeSent: Bool
     @State private var isLoading = false
     @State private var isGoogleLoading = false
-    @State private var error: LocalizedStringKey?
+    @State private var error: LoginError?
+    @State private var showsPassword: Bool
+    @State private var resendDeadline: Date?
+    @State private var failureCount = 0
+    @State private var successCount = 0
     @FocusState private var focus: Field?
     @Environment(\.webAuthenticationSession) private var webAuthenticationSession
 
@@ -22,7 +26,24 @@ public struct LoginView: View {
 
     private enum Field { case email, password, code }
 
-    public init(session: SessionStore) { self.session = session }
+    struct LoginError: Equatable {
+        var message: String
+        var place: LoginErrorPlace
+    }
+
+    public init(session: SessionStore) {
+        self.init(session: session, email: "", password: "", codeSent: false, error: nil, showsPassword: false, resendDeadline: nil)
+    }
+
+    init(session: SessionStore, email: String, password: String, codeSent: Bool, error: LoginError?, showsPassword: Bool, resendDeadline: Date?) {
+        self.session = session
+        _email = State(initialValue: email)
+        _password = State(initialValue: password)
+        _codeSent = State(initialValue: codeSent)
+        _error = State(initialValue: error)
+        _showsPassword = State(initialValue: showsPassword)
+        _resendDeadline = State(initialValue: resendDeadline)
+    }
 
     public var body: some View {
         GeometryReader { geometry in
@@ -32,10 +53,6 @@ public struct LoginView: View {
                     header
                     VStack(spacing: 16) {
                         if codeSent { codeStep } else { googleStep; credentialsStep }
-                        if let error {
-                            Text(error).font(.footnote).foregroundStyle(Color.appDestructive).multilineTextAlignment(.center)
-                                .accessibilityIdentifier("login-error")
-                        }
                     }
                     .padding(24)
                     .frame(maxWidth: .infinity)
@@ -49,11 +66,30 @@ public struct LoginView: View {
             }
             .scrollBounceBehavior(.basedOnSize)
             .scrollDismissesKeyboard(.interactively)
+            .onAppear { if LoginRules.shouldAutofocus(height: geometry.size.height) { focus = .email } }
         }
         .background(Color.appBackground.ignoresSafeArea())
-        .onAppear { focus = .email }
         .animation(.default, value: codeSent)
         .animation(.default, value: emailReady)
+        .animation(.default, value: error)
+        .onChange(of: email) { if error?.place == .email { error = nil } }
+        .onChange(of: error) { _, new in
+            if let new { AccessibilityNotification.Announcement(new.message).post() }
+        }
+        .sensoryFeedback(.error, trigger: failureCount)
+        .sensoryFeedback(.success, trigger: successCount)
+    }
+
+    @ViewBuilder private func errorView(_ place: LoginErrorPlace) -> some View {
+        if let error, error.place == place {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Image(systemName: "exclamationmark.triangle.fill").accessibilityHidden(true)
+                Text(verbatim: error.message).accessibilityIdentifier("login-error")
+            }
+            .font(.footnote).foregroundStyle(Color.appDestructive).multilineTextAlignment(.leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .transition(.opacity)
+        }
     }
 
     private var header: some View {
@@ -89,32 +125,63 @@ public struct LoginView: View {
         }
         .buttonStyle(OutlineButtonStyle()).disabled(isLoading)
         .accessibilityIdentifier("google-button")
+        errorView(.google)
         LabeledDivider("or", titleIdentifier: "login-divider")
     }
 
     @ViewBuilder private var credentialsStep: some View {
-        FormField("E-mail", isFocused: focus == .email) {
-            TextField("E-mail", text: $email, prompt: Text(""))
-                .placeholder("do.you.know@university.kurz.fyi", when: email.isEmpty)
-                .textContentType(.emailAddress).keyboard(.emailAddress).noAutocapitalization().autocorrectionDisabled()
-                .focused($focus, equals: .email).submitLabel(emailReady ? .next : .done).onSubmit { if emailReady { focus = .password } }
-                .accessibilityIdentifier("email-field")
-        }
-        if emailReady {
-            FormField("Password", isFocused: focus == .password, trailing: { Link("Forgot your password?", destination: Self.webURL.appending(path: "password/forgot")).font(.footnote.weight(.semibold)).foregroundStyle(Color.appForeground) }) {
-                SecureField("", text: $password)
-                    .textContentType(.password)
-                    .focused($focus, equals: .password).submitLabel(.go).onSubmit { Task { await signInWithPassword() } }
-                    .accessibilityIdentifier("password-field")
+        VStack(spacing: 8) {
+            FormField("E-mail", isFocused: focus == .email) {
+                TextField("E-mail", text: $email, prompt: Text(""))
+                    .placeholder("do.you.know@university.kurz.fyi", when: email.isEmpty)
+                    .textContentType(.username).keyboard(.emailAddress).noAutocapitalization().autocorrectionDisabled()
+                    .focused($focus, equals: .email).submitLabel(emailReady ? .next : .done).onSubmit { if emailReady { focus = .password } }
+                    .accessibilityIdentifier("email-field")
             }
-            .transition(.opacity.combined(with: .move(edge: .top)))
+            errorView(.email)
         }
-        Button { Task { await signInWithPassword() } } label: { label("Sign in") }
-            .buttonStyle(PrimaryButtonStyle()).disabled(isLoading || !emailReady || password.isEmpty)
-            .accessibilityIdentifier("login-button")
-        Button { requestCode() } label: { Label("E-mail me a code", systemImage: "envelope").fontWeight(.medium) }
-            .buttonStyle(TextButtonStyle()).disabled(isLoading)
-            .accessibilityIdentifier("send-code-button")
+        FormField("Password", isFocused: focus == .password, trailing: { Link("Forgot your password?", destination: Self.webURL.appending(path: "password/forgot")).font(.footnote.weight(.semibold)).foregroundStyle(Color.appForeground) }) {
+            HStack(spacing: 4) {
+                passwordInput
+                Button { showsPassword.toggle(); focus = .password } label: {
+                    Image(systemName: showsPassword ? "eye.slash" : "eye").foregroundStyle(Color.appMutedForeground).frame(width: 44, height: 44).contentShape(Rectangle())
+                }
+                .buttonStyle(.plain).padding(.vertical, -12).padding(.trailing, -8)
+                .accessibilityLabel(showsPassword ? "Hide password" : "Show password")
+                .accessibilityIdentifier("password-toggle")
+            }
+        }
+        .frame(height: emailReady ? nil : 0, alignment: .top).clipped()
+        .padding(.bottom, emailReady ? 0 : -16)
+        .opacity(emailReady ? 1 : 0)
+        .allowsHitTesting(emailReady)
+        .accessibilityHidden(!emailReady)
+        VStack(spacing: 8) {
+            Button { Task { await signInWithPassword() } } label: { label("Sign in") }
+                .buttonStyle(PrimaryButtonStyle()).disabled(isLoading || !emailReady || password.isEmpty)
+                .accessibilityIdentifier("login-button")
+            errorView(.signIn)
+        }
+        VStack(spacing: 8) {
+            Button { requestCode() } label: { Label("E-mail me a code", systemImage: "envelope").fontWeight(.medium) }
+                .buttonStyle(TextButtonStyle()).disabled(isLoading)
+                .accessibilityIdentifier("send-code-button")
+            errorView(.sendCode)
+        }
+    }
+
+    @ViewBuilder private var passwordInput: some View {
+        if showsPassword {
+            TextField("", text: $password)
+                .textContentType(.password).keyboard(.emailAddress).noAutocapitalization().autocorrectionDisabled()
+                .focused($focus, equals: .password).submitLabel(.go).onSubmit { Task { await signInWithPassword() } }
+                .accessibilityIdentifier("password-field")
+        } else {
+            SecureField("", text: $password)
+                .textContentType(.password)
+                .focused($focus, equals: .password).submitLabel(.go).onSubmit { Task { await signInWithPassword() } }
+                .accessibilityIdentifier("password-field")
+        }
     }
 
     @ViewBuilder private var codeStep: some View {
@@ -125,13 +192,26 @@ public struct LoginView: View {
                 .focused($focus, equals: .code).accessibilityIdentifier("code-field")
                 .onChange(of: code) { _, new in if new.count >= Self.codeLength { Task { await verifyCode() } } }
         }
-        Button { Task { await verifyCode() } } label: { label("Verify and sign in") }
-            .buttonStyle(PrimaryButtonStyle()).disabled(isLoading || code.count < Self.codeLength)
-            .accessibilityIdentifier("verify-button")
-        Button("Resend code") { Task { await sendCode() } }
-            .buttonStyle(TextButtonStyle()).disabled(isLoading)
-        Button("Use another e-mail") { codeSent = false; code = ""; error = nil }
+        VStack(spacing: 8) {
+            Button { Task { await verifyCode() } } label: { label("Verify and sign in") }
+                .buttonStyle(PrimaryButtonStyle()).disabled(isLoading || code.count < Self.codeLength)
+                .accessibilityIdentifier("verify-button")
+            errorView(.code)
+        }
+        resendButton
+        Button("Use another e-mail") { codeSent = false; code = ""; error = nil; resendDeadline = nil }
             .buttonStyle(TextButtonStyle())
+    }
+
+    private var resendButton: some View {
+        TimelineView(.periodic(from: .now, by: 1)) { context in
+            let remaining = resendDeadline.map { LoginRules.resendRemaining(until: $0, now: context.date) } ?? 0
+            Button { Task { await sendCode(place: .code) } } label: {
+                if remaining > 0 { Text("Resend in \(remaining)s").monospacedDigit() } else { Text("Resend code") }
+            }
+            .buttonStyle(TextButtonStyle()).disabled(isLoading || remaining > 0)
+            .accessibilityIdentifier("resend-button")
+        }
     }
 
     private var emailReady: Bool { normalizedEmail.wholeMatch(of: /[^\s@]+@[^\s@]+\.[^\s@]+/) != nil }
@@ -141,29 +221,41 @@ public struct LoginView: View {
         Group { if isLoading && !isGoogleLoading { Text("Signing in…").fontWeight(.semibold) } else { Text(title).fontWeight(.semibold) } }.frame(maxWidth: .infinity)
     }
 
-    private func perform(_ describe: @escaping (Error) -> LocalizedStringKey?, _ work: () async throws -> Void) async {
+    private func perform(place: LoginErrorPlace, _ describe: @escaping (Error) -> LocalizedStringResource?, _ work: () async throws -> Void) async {
         guard !isLoading else { return }
         isLoading = true
         error = nil
         defer { isLoading = false }
-        do { try await work() } catch { self.error = describe(error) }
+        do {
+            try await work()
+        } catch {
+            if case .rateLimited(let retryAfter) = error as? APIError, codeSent { resendDeadline = LoginRules.resendDeadline(from: .now, retryAfter: retryAfter) }
+            if let message = describe(error) {
+                self.error = LoginError(message: String(localized: message), place: LoginRules.place(for: error, default: place))
+                failureCount += 1
+            }
+        }
     }
 
     private func signInWithPassword() async {
-        await perform({ failure($0, unauthorized: "Wrong e-mail or password. Too many attempts pause password sign-in for a while.") }) { try await session.signIn(email: normalizedEmail, password: password) }
+        await perform(place: .signIn, { failure($0, unauthorized: "Wrong e-mail or password. Too many attempts pause password sign-in for a while.") }) {
+            try await session.signIn(email: normalizedEmail, password: password)
+            successCount += 1
+        }
     }
 
     private func signInWithGoogle() async {
         isGoogleLoading = true
         defer { isGoogleLoading = false }
-        await perform(googleFailure) {
+        await perform(place: .google, googleFailure) {
             let request = Self.google.makeRequest()
             let callback = try await webAuthenticationSession.authenticate(using: request.url, callback: .customScheme(Self.google.callbackScheme), additionalHeaderFields: [:])
             try await session.signInWithGoogle(idToken: try await Self.google.idToken(for: request, callback: callback))
+            successCount += 1
         }
     }
 
-    private func googleFailure(_ error: Error) -> LocalizedStringKey? {
+    private func googleFailure(_ error: Error) -> LocalizedStringResource? {
         if error is CancellationError || (error as? ASWebAuthenticationSessionError)?.code == .canceledLogin { return nil }
         if error is GoogleSignInService.Failure { return "Google sign-in did not go through. Please try again." }
         if case .server(404, _) = error as? APIError { return "Google sign-in isn't available right now." }
@@ -171,15 +263,19 @@ public struct LoginView: View {
     }
 
     private func requestCode() {
-        guard emailReady else { error = "Enter your e-mail first, then we send you a code."; return }
-        Task { await sendCode() }
+        guard emailReady else {
+            error = LoginError(message: String(localized: "Enter your e-mail first, then we send you a code."), place: .email)
+            failureCount += 1
+            return
+        }
+        Task { await sendCode(place: .sendCode) }
     }
 
-    private func failure(_ error: Error, unauthorized: LocalizedStringKey) -> LocalizedStringKey {
+    private func failure(_ error: Error, unauthorized: LocalizedStringResource) -> LocalizedStringResource {
         guard let api = error as? APIError else { return "Something went wrong, please try again later." }
         switch api {
         case .unauthorized: return unauthorized
-        case .server(429, _): return "Too many attempts. Please wait a few minutes and try again."
+        case .rateLimited: return "Too many attempts. Please wait a few minutes and try again."
         case .server(403, _): return "Your account has been deactivated. Contact support if you believe this is a mistake."
         case .server(_, "google_invalid_token"): return "Google sign-in did not go through. Please try again."
         case .server(_, "google_email_not_verified"): return "Your Google account e-mail is not verified yet, so it can't be used to sign in."
@@ -193,16 +289,20 @@ public struct LoginView: View {
         }
     }
 
-    private func sendCode() async {
-        await perform({ failure($0, unauthorized: "Something went wrong, please try again later.") }) {
+    private func sendCode(place: LoginErrorPlace) async {
+        await perform(place: place, { failure($0, unauthorized: "Something went wrong, please try again later.") }) {
             try await session.auth.requestCode(email: normalizedEmail, locale: Locale.current.language.languageCode?.identifier)
+            resendDeadline = LoginRules.resendDeadline(from: .now)
             codeSent = true
             focus = .code
         }
     }
 
     private func verifyCode() async {
-        await perform({ code = ""; return failure($0, unauthorized: "That code is wrong or expired. Request a new one if needed.") }) { try await session.signIn(email: normalizedEmail, code: code) }
+        await perform(place: .code, { code = ""; return failure($0, unauthorized: "That code is wrong or expired. Request a new one if needed.") }) {
+            try await session.signIn(email: normalizedEmail, code: code)
+            successCount += 1
+        }
     }
 }
 
