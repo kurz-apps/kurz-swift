@@ -23,7 +23,7 @@ public struct RootView: View {
 
     public var body: some View {
         if sizeClass == .compact {
-            AgendaView(model: model, userEmail: userEmail, signOut: signOut)
+            NavigationStack { AgendaView(model: model, userEmail: userEmail, signOut: signOut) }
         } else {
             NavigationSplitView {
                 List(selection: $selection) {

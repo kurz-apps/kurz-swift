@@ -6,7 +6,7 @@ import SwiftUI
 @MainActor private func agenda(_ state: AgendaModel.PreviewState = .sample, period: AgendaModel.Period = .week, configure: (AgendaModel) -> Void = { _ in }) -> some View {
     let model = AgendaModel.preview(state, period: period)
     configure(model)
-    return AgendaView(model: model, userEmail: "ana@kurz.app") {}
+    return NavigationStack { AgendaView(model: model, userEmail: "ana@kurz.app") {} }
 }
 
 private var sample: AgendaSession { AgendaResponse.preview.sessions.first { $0.appointments.count > 2 && $0.pendingCount > 0 }! }
